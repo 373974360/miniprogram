@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="styles/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/wmh.css"/>
+    <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/browser.min.js"></script>
+</head>
+<body style="background: #ffffff">
+<div id="app">
+    <header >
+        <div class="mui-titlea">
+            <img src="images/zhcx_logo.png">
+            <div class="return-tag">
+                <span class="return-btn" style="font-size: 13px">
+                    <a class="mui-icon mui-icon-left-nav" style="font-size: 16px; color: #fff;"></a>
+                    &nbsp;&nbsp;返回首页
+                </span>
+            </div>
+        </div>
+    </header>
+    <div>
+        <div class="search-box">
+            <div class="search-row search-title">办件物流查询</div>
+            <div class="search-row">
+                <input class="search-input" placeholder="请输入搜索关键词"/>
+            </div>
+            <div class="search-row">
+                <button type="button" class="mui-btn mui-btn-primary search-btn" @click="search">查 询</button>
+                <button type="button" class="mui-btn mui-btn-primary btn-cancel search-btn search-btn2">取 消</button>
+            </div>
+        </div>
+        <div class="mui-card" v-show="cardVisible" style="display: none">
+            <div class="mui-card-header">
+                <div>
+                    <div class="card-title">
+                        <img src="images/tuding.png">
+                        <div class="title-text">建筑工程规划条件核实合格通知书核发</div>
+                    </div>
+                    <div class="logistics-list">
+                        <ul>
+                            <li class="first">
+                                <div class="node-container">
+                                    <div class="node"></div>
+                                </div>
+                                <div class="content">
+                                    <p>投递并签收，签收人：他人收 </p>
+                                    <p>2019-06-14 12:30:03</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="node-container">
+                                    <div class="node"></div>
+                                </div>
+                                <div class="content">
+                                    <p>西安港务区揽投部安排投递（投递员姓名：候阿列;联系电话：18392983792）</p>
+                                    <p>2019-06-14 08:19:03</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="node-container">
+                                    <div class="node"></div>
+                                </div>
+                                <div class="content">
+                                    <p>到达西安港务区揽投部</p>
+                                    <p>2019-06-14 07:00:42</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="node-container">
+                                    <div class="node"></div>
+                                </div>
+                                <div class="content">
+                                    <p>离开中国邮政速递物流股份有限公司西安市同城邮件处理中心 发往西安港务区揽投部</p>
+                                    <p>2019-06-13 23:20:10</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="node-container">
+                                    <div class="node"></div>
+                                </div>
+                                <div class="content">
+                                    <p>到达中国邮政速递物流股份有限公司西安市同城邮件处理中心 处理中心</p>
+                                    <p>2019-06-13 21:01:10</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="node-container">
+                                    <div class="node"></div>
+                                </div>
+                                <div class="content">
+                                    <p>离开西安港务区揽投部 发往西安市</p>
+                                    <p>2019-06-13 19:57:43</p>
+                                </div>
+                            </li>
+                            <li class="last">
+                                <div class="node-container">
+                                    <div class="node"></div>
+                                </div>
+                                <div class="content">
+                                    <p>西安港务区揽投部已收件，（揽投员姓名：胡歆;联系电话：18292862133 ）</p>
+                                    <p>2019-06-13 17:50:00</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="height: 48px"></div>
+        <div class="return-btn-container">
+            <span class="return-btn"><a class="mui-icon mui-icon-left-nav" style="color: #fff;"></a>返回首页</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/babel">
+    mui.init({
+        swipeBack: true //启用右滑关闭功能
+    });
+    new Vue({
+        el: '#app',
+        data: {
+            cardVisible: false
+        },
+        methods: {
+            search() {
+                this.cardVisible = true
+            }
+        }
+    })
+</script>
