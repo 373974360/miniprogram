@@ -103,8 +103,8 @@
                                     </div>
                                     <div class="info">
                                         <input id="yysj" name="yysj" type="text" class="laydate-icon"
-                                                             readonly="readonly"
-                                                             placeholder="预约时间"></div>
+                                               readonly="readonly"
+                                               placeholder="预约时间"></div>
                                 </div>
                                 <div class="m-yy-info">
                                     <div class="date-info">请选择预约时间：
@@ -159,13 +159,13 @@
             // apiUrl: 'http://localhost:8765',
             distance: 200,
             identityVo: {
-                idcardNo: undefined,
+                idcardNo: '610114199203273526',
                 name: undefined,
                 gender: undefined,
                 birthday: undefined,
                 address: undefined,
                 phone: undefined,
-                wechatOpenid: undefined
+                wechatOpenid: 'otddA5hsJMF8Qgdw6l1PTD05O5f0'
             },
             categoryItemVo: {
                 categoryId: undefined,
@@ -196,7 +196,7 @@
             countList: [],
             isShowMyPreOrder: false,
             preorderVo: {
-                identityId: undefined,
+                identityId: '1128175311922401281',
                 itemId: undefined,
                 itemName: undefined,
                 phone: undefined,
@@ -204,7 +204,7 @@
                 timeSlot: undefined,
                 channel: 2,
                 status: 0,
-                wechatOpenid: undefined
+                wechatOpenid: 'otddA5hsJMF8Qgdw6l1PTD05O5f0'
             },
             preorderVoList: undefined,
             isShowMyInfo: true,
@@ -227,7 +227,7 @@
                                 _this.preorderVo.wechatOpenid = result.data.openId;
                                 _this.getIdentityInfoByOpenId();
                             } else {
-                                mui.alert("请先关注莲湖区市民中心公众号!");
+                                mui.alert("请先关注***政务大厅公众号!");
                                 _this.isShowHtml = false;
                             }
                         }
@@ -290,7 +290,7 @@
                     success: function (res) {
                         let la1 = res.latitude; // 纬度，浮点数，范围为90 ~ -90
                         let lo1 = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-                        // 坐标位置：莲湖区市民中心,34.2693997276,108.8841853772
+                        // 坐标位置：***政务大厅,34.2693997276,108.8841853772
                         let la2 = "34.2693997276";
                         let lo2 = "108.8841853772";
                         //创新大厦
@@ -423,11 +423,11 @@
                 this.getItemIdsByPensonId();
                 let _this = this;
                 if (!this.checkLocation()) {
-                    mui.alert("请在莲湖区市民中心200米范围内抽号");
+                    mui.alert("请在***政务大厅200米范围内抽号");
                     return;
                 }
                 if (_this.identityVo.idcardNo) {
-                    mui.alert("抽号成功之后,已叫号但您未办理,可前往个人中心-我的抽号进行激活,莲湖区市民中心200米范围内可激活", "重要提示", "点击抽号", function () {
+                    mui.alert("抽号成功之后,已叫号但您未办理,可前往个人中心-我的抽号进行激活,***政务大厅200米范围内可激活", "重要提示", "点击抽号", function () {
                         let extend = $.extend(_this.identityVo, {preorderNumber: ""}, {itemId: itemId}, {url: _this.hardUrl});
                         let inArray = $.inArray(itemId, _this.itemIds);
                         if (inArray == -1) {
@@ -493,7 +493,7 @@
                 _this.preorderVo.itemId = item.id;
                 _this.preorderVo.name = item.name;
                 if (this.identityVo.idcardNo) {
-                    mui.alert("预约成功之后，请务必于预约时间段内前往个人中心-我的预约进行预约抽号，莲湖区市民中心200米范围内可预约抽号", "重要提示", "确定", function () {
+                    mui.alert("预约成功之后，请务必于预约时间段内前往个人中心-我的预约进行预约抽号，***政务大厅200米范围内可预约抽号", "重要提示", "确定", function () {
                         _this.initItemCategory = false;
                         if (item.days == undefined) {
                             mui.alert("对不起，该事项不能预约")
@@ -509,7 +509,7 @@
                             _this.countList = item.counts.split(','); //预约人数
                             _this.timeIdList = item.timeId.split(','); //时间段id
                             _this.getHoliday();
-                            _this.getPreOrderBlcakByIdentityId();
+                            // _this.getPreOrderBlcakByIdentityId();
                         }
 
                     })
@@ -634,20 +634,20 @@
             }
         },
         created() {
-            if (isWeiXin()) {
-                if (this.getNowTime() > "23:59") {
-                    mui.alert("亲爱的市民朋友们，市民中心一天的工作已经结束，如您还有需要办理的事项，请您进入在线预约，选择其他时间办理。");
-                }
-                //获取openId和是否关注标识
-                this.isShowHtml = true;
-                this.authorize();
-                this.tab = getParam("tab");
-                this.showItemPages('8021180485468160', 'http://172.16.6.222:1777/getno', undefined);
-                this.getJsapiTicket();
-            } else {
-                mui.alert("请在微信公众号中打开此页面！");
-                this.isShowHtml = false;
+            // if (isWeiXin()) {
+            if (this.getNowTime() > "23:59") {
+                mui.alert("亲爱的市民朋友们，市民中心一天的工作已经结束，如您还有需要办理的事项，请您进入在线预约，选择其他时间办理。");
             }
+            //获取openId和是否关注标识
+            this.isShowHtml = true;
+            // this.authorize();
+            this.tab = getParam("tab");
+            this.showItemPages('8021180485468160', 'http://172.16.6.222:1777/getno', undefined);
+            // this.getJsapiTicket();
+            // } else {
+            //     mui.alert("请在微信公众号中打开此页面！");
+            //     this.isShowHtml = false;
+            // }
         }
     });
 </script>

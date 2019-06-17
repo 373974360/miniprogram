@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
-    <title>Title</title>
+    <title>微政务</title>
     <script src="js/jquery-2.2.4.min.js"></script>
     <script src="js/mui.min.js"></script>
     <script src="js/com.util.js"></script>
@@ -185,7 +185,7 @@
                 birthday: undefined,
                 address: undefined,
                 phone: undefined,
-                wechatOpenid: undefined
+                wechatOpenid: 'otddA5hsJMF8Qgdw6l1PTD05O5f0'
             },
             preorderVo: {
                 identityId: undefined,
@@ -196,7 +196,7 @@
                 timeSlot: undefined,
                 channel: 2,
                 status: 0,
-                wechatOpenid: undefined
+                wechatOpenid: 'otddA5hsJMF8Qgdw6l1PTD05O5f0'
             },
             preorderVoList: undefined,
             page: 1,
@@ -241,6 +241,7 @@
             //微信认证
             authorize: function () {
                 let code = getParam("code");
+                code = 1;
                 let _this = this;
                 $.ajax({
                     method: "get",
@@ -249,16 +250,15 @@
                     dataType: "json",
                     success: function (result) {
                         if (result.status == 200 && result.data != undefined) {
-                            if (result.data.subscribe && result.data.openId != null) {
-                                _this.isShowHtml = true;
-                                _this.weChatConfig.wechatOpenid = result.data.openId;
-                                _this.identityVo.wechatOpenid = result.data.openId;
-                                _this.preorderVo.wechatOpenid = result.data.openId;
-                                _this.getIdentityInfoByOpenId();
-                            } else {
-                                _this.isShowHtml = false;
-                                mui.alert("请先关注莲湖区市民中心公众号!");
-                            }
+                            // if (result.data.subscribe && result.data.openId != null) {
+                            _this.isShowHtml = true;
+                            _this.identityVo.wechatOpenid = result.data.openId;
+                            _this.preorderVo.wechatOpenid = result.data.openId;
+                            _this.getIdentityInfoByOpenId();
+                            // } else {
+                            //     _this.isShowHtml = false;
+                            //     mui.alert("请先关注莲湖区市民中心公众号!");
+                            // }
                         }
                     }
                 });
@@ -528,15 +528,16 @@
         },
         created() {
             this.initRaty();
-            if (isWeiXin()) {
-                //获取openId和是否关注标识
-                this.isShowHtml = true;
-                this.authorize();
-                this.getJsapiTicket();
-            } else {
-                mui.alert("请在微信公众号中打开此页面！");
-                this.isShowHtml = false;
-            }
+            // if (isWeiXin()) {
+            //获取openId和是否关注标识
+            this.isShowHtml = true;
+            // this.authorize();
+            this.getIdentityInfoByOpenId()
+            // this.getJsapiTicket();
+            // } else {
+            //     mui.alert("请在微信公众号中打开此页面！");
+            //     this.isShowHtml = false;
+            // }
         }
     })
 </script>
