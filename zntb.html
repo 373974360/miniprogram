@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>微政务</title>
+    <link rel="stylesheet" type="text/css" href="styles/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/wmh.css"/>
+    <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/browser.min.js"></script>
+</head>
+<body style="background: #ffffff">
+<div id="app">
+    <header >
+        <div class="mui-titlea">
+            <img src="images/zhcx_logo.png">
+            <div class="return-tag">
+                <span class="return-btn" style="font-size: 13px">
+                    <a class="mui-icon mui-icon-left-nav" style="font-size: 16px; color: #fff;"></a>
+                    &nbsp;&nbsp;返回首页
+                </span>
+            </div>
+        </div>
+    </header>
+    <div>
+        <div class="search-box">
+            <video src="video/zztb.mp4" height="300" width="90%" controls autoplay></video>
+        </div>
+        <div style="height: 48px"></div>
+        <div class="return-btn-container">
+            <span class="return-btn"><a class="mui-icon mui-icon-left-nav" style="color: #fff;"></a>返回首页</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/babel">
+    mui.init({
+        swipeBack: true //启用右滑关闭功能
+    });
+    new Vue({
+        el: '#app',
+        data: {
+            cardVisible: false
+        },
+        methods: {
+            search() {
+                this.cardVisible = true
+            }
+        }
+    })
+</script>
