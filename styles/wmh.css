@@ -65,10 +65,10 @@
 .form-container { width: 70%; margin: auto }
 .form-item { margin-top: 12px; border-bottom: 1px solid #d0d0d0; height: 50px; position: relative }
 .form-item img { position: absolute; left: 0; margin: 12px 0; width: 24px }
-.form-item input { position: absolute; left: 36px; height: 36px; margin: 8px; border: none; font-size: 20px; }
+.form-item input { position: absolute; left: 36px; height: 36px; margin: 8px; border: none; font-size: 18px; width: 80% }
 .form-submit { padding: 10px 0; width: 80%; height: 48px; font-size: 20px }
 
-.card-box { width: 80%; margin: 22px auto }
+.card-box { width: 80%; margin: 30px auto }
 .card-box .card-title { padding-top: 8px; text-align: center }
 .card-content { padding: 12px 20px; }
 .card-content tr { height: 30px }
