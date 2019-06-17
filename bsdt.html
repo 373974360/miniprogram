@@ -76,6 +76,9 @@
                         @click="showCallNumber(item.id)">
                         <span><a href="#">{{item.name}}</a></span>
                     </li>
+                    <li class="mui-col-xs-3" v-if="isShowItemList && initItemCategory && tab==2"
+                        v-for="item in itemList"
+                        @click="showPreOrder(item)"><span><a href="#">{{item.name}}</a></span></li>
                 </ul>
             </div>
             <div class="div-bottom" v-if="isShowItemList && initItemCategory && tab==2">
