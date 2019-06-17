@@ -1,0 +1,16 @@
+@charset "utf-8";
+.g-blk10{height: 10px;width: 100%;clear: both;}
+.ofh{overflow: hidden;}
+.left{float: left;}
+.right{float: right;}
+.mt44{margin-top: 44px;}
+.u-tc{text-align: center;}
+.g-blk0{height: 0px;width: 100%;clear: both;}
+body{background: #ffffff;}
+
+/*通用头部*/
+.m-common-topbar{background: #3a84d9;}
+.m-common-topbar .u-menu-button{width: 25px;display:inline-block;background: url("../../../images/m_images/common.files/topbar-right.png") no-repeat 96% center #3a84d9;height: 25px;float: right;background-size: 25px 25px;margin-top: 8px;}
+.m-common-topbar .mui-title{color:#fff; }
+.m-common-topbar .mui-icon{color: #ffffff!important;}
+.m-common-topbar.mui-bar-nav{-webkit-box-shadow:none!important;box-shadow: none!important;}
