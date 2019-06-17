@@ -24,18 +24,13 @@
 </head>
 <body style="background: transparent;">
 <div class="app">
-    <header class="mui-bar-nav">
-        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"
-           style="color: #FFFFFF;padding: 15px;position: absolute;"></a>
-    </header>
-    <div class="mui-content"
-         style="background: url(images/bsdt-bjt.png) no-repeat center;background-size: 100% 100%;height: 500px;">
-        <div style="padding-top: 10%">
-            <div class="div-box1">
+    <div class="mui-content">
+        <div class="content-top">
+            <div class="div-top">
                 <div class="sancia-title" v-if="tab == 1">在线抽号</div>
                 <div class="sancia-title" v-if="tab == 2">预约抽号</div>
                 <div class="mui-line"></div>
-                <ul class="faceul">
+                <ul class="top-faceul">
                     <li class="mui-col-xs-3 hz"
                         @click="showItemPages('8021180485468160','http://172.16.6.222:1777/getno',$event)"><img
                             src="images/hz.png"><span><a href="#">户&nbsp;&nbsp;政</a></span>
@@ -67,31 +62,31 @@
             </div>
         </div>
     </div>
-    <div class="mui-content" style="background-color: #f7f7f700;position: absolute;top: 300px;">
+    <div class="mui-content">
         <div class="mui-slider-item ulbd mui-active">
-            <div class="div-box2" v-if="!isShowItemList && initItemCategory">
-                <ul class="faceul1">
+            <div class="div-bottom" v-if="!isShowItemList && initItemCategory">
+                <ul class="bottom-faceul">
                     <li class="mui-col-xs-3"  v-for="category in categoryList"
                         @click="showItemList(category.id,'')"><span><a href="#">{{category.name}}</a></span></li>
 
                 </ul>
             </div>
-            <div class="div-box2" v-if="isShowItemList && initItemCategory && tab==1">
-                <ul class="faceul1">
+            <div class="div-bottom" v-if="isShowItemList && initItemCategory && tab==1">
+                <ul class="bottom-faceul">
                     <li class="mui-col-xs-3"  v-for="item in itemList"
                         @click="showCallNumber(item.id)"><span><a href="#">{{item.name}}</a></span></li>
                     <li class="mui-col-xs-3" v-if="isShowItemList && initItemCategory && tab==2" v-for="item in itemList"
                         @click="showPreOrder(item)"><span><a href="#">{{item.name}}</a></span></li>
                 </ul>
             </div>
-            <div class="div-box2" v-if="isShowItemList && initItemCategory && tab==2">
-                <ul class="faceul1">
+            <div class="div-bottom" v-if="isShowItemList && initItemCategory && tab==2">
+                <ul class="bottom-faceul">
                     <li class="mui-col-xs-3" v-for="item in itemList"
                         @click="showPreOrder(item)"><span><a href="#">{{item.name}}</a></span></li>
                 </ul>
             </div>
-            <div class="" v-if="isShowPreOrderPage && !initItemCategory" style="margin-top: 20px;">
-                <div class="divs">
+            <div class="item-yy" v-if="isShowPreOrderPage && !initItemCategory">
+                <div class="m-item">
                     <div class="imgs"><img src="images/yy-bg.png" alt=""></div>
                     <div class="infos">预约事项：<span style="color: #f1355a;">{{preorderVo.name}}</span></div>
                 </div>
@@ -99,17 +94,17 @@
                     <div class="mui-card-content-inner">
                         <div class="m-yy-date u-tc font-size-14">
                             <div class="m-yysd">
-                                <div class="divs1">
-                                    <div class="infos1">请选择预约日期：
+                                <div class="m-yy-info">
+                                    <div class="date-info">请选择预约日期：
                                     </div>
-                                    <div class="infos1"><input id="yysj" name="yysj" type="text" class="laydate-icon"
+                                    <div class="info"><input id="yysj" name="yysj" type="text" class="laydate-icon"
                                                                readonly="readonly"
-                                                               placeholder="预约时间" style="background-color: #f9f9f9;"></div>
+                                                               placeholder="预约时间"></div>
                                 </div>
-                                <div  class="divs1">
-                                    <div class="infos1">请选择预约时间：
+                                <div  class="m-yy-info">
+                                    <div class="date-info">请选择预约时间：
                                     </div>
-                                    <div class="infos1">
+                                    <div class="info">
                                         <ul class="timeList">
                                             <li v-for="time in timeList" @click="changeTime(time,$event)" class="left">
                                                 {{time}}
@@ -122,10 +117,14 @@
 
                         </div>
                     </div>
-                    <div class="mui-button-row" style="padding-bottom: 20px;">
-                        <input type="submit" value="确定" style="width: 55%;" @click="addPreorder"/>
+                    <div class="mui-button-row">
+                        <input type="submit" value="确定" @click="addPreorder"/>
                     </div>
                 </div>
+            </div>
+            <div style="height: 48px"></div>
+            <div class="return-btn-container">
+                <a class="mui-icon mui-icon-left-nav" style="color: #fff;" href="index.html"><span class="return-btn" style="vertical-align: baseline;">返回首页</span></a>
             </div>
         </div>
         <div>
@@ -149,8 +148,8 @@
         data: {
             isShowHtml: false,
             currentTab: 1,
-            // apiUrl: 'http://lhsmzx.deyatong.com',
-            apiUrl: 'http://47.96.11.207',
+            apiUrl: 'http://lhsmzx.deyatong.com',
+            // apiUrl: 'http://47.96.11.207',
             // apiUrl: 'http://localhost:8765',
             weChatConfig: {
                 appId: 'wx8c7270568dc7addd',
@@ -344,7 +343,7 @@
             //事项分类
             showItemPages(itemCategory, url, e) {
                 if (e == undefined) {
-                    $(".div-box1 li").first().addClass("hover");
+                    $(".div-top li").first().addClass("hover");
                 }else {
                     $(e.currentTarget).addClass('hover').siblings().removeClass('hover');
                 }
