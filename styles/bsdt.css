@@ -1,5 +1,12 @@
 
-.div-box1 li {
+.content-top {
+    padding-top: 10%;
+    background: url(../images/bsdt-bjt.png) no-repeat center;
+    background-size: 100% 100%;
+    background-color: white;
+}
+
+.div-top li {
     list-style-type: none;
     float: left;
     margin-bottom: 10px;
@@ -7,12 +14,12 @@
     border: 1px;
 }
 
-.div-box1 li.hover {
+.div-top li.hover {
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#f19aab), to(#f56481));
     border-radius: 12px;
 }
 
-.div-box2 li {
+.div-bottom li {
     background: #e4f0fe;
     border-radius: 12px;
     list-style-type: none;
@@ -26,44 +33,44 @@
     height: 70px;
 }
 
-.div-box2 li:hover {
+.div-bottom li:hover {
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#51a1fe), to(#1f7ce7));
     border-radius: 12px;
 
 }
 
-.faceul {
+.top-faceul {
     height: auto;
     display: block;
     overflow: hidden;
-    padding: 0 10px;
+    padding: 0 10px 35px 10px;
 }
 
-.faceul img {
+.top-faceul img {
     margin: 10px 0 0 29px;
     width: 35%;
     height: 35%;
 }
 
-.faceul span {
+.top-faceul span {
     font-size: 15px;
     display: block;
     text-align: center;
     padding-top: 5px;
 }
 
-.faceul a {
+.top-faceul a {
     color: #ffffff;
 }
 
-.faceul1 {
+.bottom-faceul {
     height: auto;
     display: block;
     overflow: hidden;
     padding: 0 10px;
 }
 
-.faceul1 span {
+.bottom-faceul span {
     font-size: 15px;
     display: block;
     text-align: center;
@@ -74,11 +81,11 @@
     text-overflow: ellipsis;
 }
 
-.faceul1 a {
+.bottom-faceul a {
     color: #1f7cee;
 }
 
-.faceul1 a:hover {
+.bottom-faceul a:hover {
     color: #fff;
 }
 
@@ -94,32 +101,56 @@
     color: white;
     font-size: 23px;
 }
-.divs .imgs{
+
+.m-item .imgs {
     display: inline-block;
     vertical-align: middle;
 }
-.divs img{
+
+.m-item img {
     width: 50%;
     height: 50%;
     margin-left: 10px;
 }
-.divs .infos{
+
+.m-item .infos {
     display: inline-block;
     color: #1f7cee;
     font-size: 15px;
 }
-.divs1 .infos1{
+
+.m-yy-info .date-info {
     font-size: 15px;
     text-align: left;
 }
-.divs1 ul li{
-    background:#f9f9f9
+
+.m-yy-info ul li {
+    background: #f9f9f9
 }
+
 .m-yysd ul li.hover {
     background: #ddebfc;
     color: #1f7cee;
     border: 1px solid #1f7cee;
 }
+
 .m-yysd ul li {
     width: 46%;
+}
+
+.mui-button-row input {
+    width: 55%;
+    background-color: #1f7cee;
+}
+.mui-button-row{
+    padding-bottom: 20px;
+}
+.item-yy{
+    margin-top: 20px;
+}
+.mui-content{
+    background-color: #f7f7f700;
+}
+#yysj{
+    background-color: #f9f9f9;
 }
