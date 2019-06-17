@@ -33,12 +33,12 @@
     <header>
         <div class="mui-titlea">
             <img src="images/bjt.png">
-            <div class="return-tag">
+            <!--<div class="return-tag">
                 <span class="return-btn" style="font-size: 13px">
                     <a class="mui-icon mui-icon-left-nav" style="font-size: 16px; color: #fff;"></a>
                     &nbsp;&nbsp;返回首页
                 </span>
-            </div>
+            </div>-->
             <div class="grzx-top-container">
                 <div class="title">个人中心</div>
                 <div class="mui-line"></div>
@@ -77,15 +77,15 @@
             <div class="form-container">
                 <div class="form-item">
                     <img src="images/name.png">
-                    <input placeholder="请输入姓名" v-model="identityVo.name">
+                    <input type="text" placeholder="请输入姓名" v-model="identityVo.name">
                 </div>
                 <div class="form-item">
                     <img src="images/card.png">
-                    <input placeholder="请输入身份证号" v-model="identityVo.idcardNo">
+                    <input type="text" placeholder="请输入身份证号" v-model="identityVo.idcardNo">
                 </div>
                 <div class="form-item">
                     <img src="images/phone.png">
-                    <input placeholder="请输入电话号码" v-model="identityVo.phone">
+                    <input type="text" placeholder="请输入电话号码" v-model="identityVo.phone">
                 </div>
                 <div style="height: 20px"></div>
                 <button type="button" class="mui-btn mui-btn-primary search-btn form-submit" @click="save">确&nbsp;&nbsp;&nbsp;&nbsp;定</button>

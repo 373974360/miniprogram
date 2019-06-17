@@ -37,7 +37,7 @@
 	color: #1b1b1b;}
 .card-title { padding: 14px; color: #1d7df2; font-size: 16px; width: 100% }
 .card-title img { height: 16px; vertical-align: middle }
-.card-title .title-text { display: inline-block; margin-left: 8px; vertical-align: middle }
+.card-title .title-text { display: inline-block; margin-left: 12px; vertical-align: middle; width: 86% }
 
 .logistics-list { padding: 20px 0; position: relative }
 .logistics-list ul { list-style: none; overflow: visible; margin-top: 12px; padding: 0 20px; }
