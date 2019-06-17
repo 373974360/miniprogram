@@ -31,7 +31,10 @@
 .mui-card-content { padding: 10px 15px }
 
 .bottom-border-dashed { border-bottom: 1px dashed #d0d0d0; }
-
+.bottom-border-dashed p{
+	font-size: 14px;
+	font-weight: bold;
+	color: #1b1b1b;}
 .card-title { padding: 14px; color: #1d7df2; font-size: 16px; width: 100% }
 .card-title img { height: 16px; vertical-align: middle }
 .card-title .title-text { display: inline-block; margin-left: 8px; vertical-align: middle }
@@ -73,12 +76,12 @@
 .card-content { padding: 12px 20px; }
 .card-content tr { height: 30px }
 .card-content .label { font-size: 14px; font-weight: bold; color: #1b1b1b; }
-.card-content p { margin: 0 }
+.card-content p {margin: 0;text-align: justify;display: inline-block; }
 
 .rate_ico { width: 100% !important; }
 .rate_ico img { width: 15% }
 
-.btn-box { text-align: center; margin-bottom: 10px }
+.btn-box { text-align: center; margin-bottom: 10px;margin-top: 10px; }
 .card-btn { width: 36%; }
 .card-border-bottom { position: absolute; left: 0; bottom: -20px; width: 100% }
 .card-border-bottom img { width: 100% }
