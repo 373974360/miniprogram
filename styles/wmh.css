@@ -18,8 +18,9 @@
 .search-box { text-align: center; padding: 20px 0; }
 .search-row { margin: 20px 0; }
 .search-title { color: #1d7df2; font-size: 24px; height: 30px; line-height: 30px; }
-.search-input { background-color: #eeeeee; height: 38px; width: 80%; border: 1px solid #dddddd; padding: 8px 12px; text-align: center }
-.search-input:focus { text-align: left }
+
+.search-row input { background-color: #eeeeee; height: 38px; width: 80%; border: 1px solid #dddddd; padding: 8px 12px; text-align: center }
+.search-row input:focus { text-align: left }
 .search-btn { width: 25%; height: 36px; }
 .search-btn2 { margin-left: 10%; }
 .btn-cancel { background-color: #bfbfbf; border: 1px solid #bfbfbf }
