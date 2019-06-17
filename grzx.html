@@ -2,6 +2,21 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Title</title>
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script src="js/mui.min.js"></script>
+    <script src="js/com.util.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <link href="styles/m_styles/css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles/datepicker3.css">
+    <link rel="stylesheet" href="styles/m_styles/common.skin/common.css">
+    <link rel="stylesheet" href="styles/m_styles/app.skin/app.css?20181220">
+    <link rel="stylesheet" type="text/css" href="styles/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/wmh.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/app.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
     <title>微政务</title>
     <link rel="stylesheet" type="text/css" href="styles/mui.min.css"/>
@@ -11,9 +26,10 @@
     <script src="js/browser.min.js"></script>
     <script src="js/jquery-2.2.4.min.js"></script>
     <script src="js/raty/lib/jquery.raty.js"></script>
+    <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body style="background: #ffffff">
-<div id="app">
+<div id="app" v-if="isShowHtml">
     <header>
         <div class="mui-titlea">
             <img src="images/bjt.png">
@@ -61,97 +77,72 @@
             <div class="form-container">
                 <div class="form-item">
                     <img src="images/name.png">
-                    <input placeholder="请输入姓名">
+                    <input placeholder="请输入姓名" v-model="identityVo.name">
                 </div>
                 <div class="form-item">
                     <img src="images/card.png">
-                    <input placeholder="请输入身份证号">
+                    <input placeholder="请输入身份证号" v-model="identityVo.idcardNo">
                 </div>
                 <div class="form-item">
                     <img src="images/phone.png">
-                    <input placeholder="请输入电话号码">
+                    <input placeholder="请输入电话号码" v-model="identityVo.phone">
                 </div>
                 <div style="height: 20px"></div>
-                <button type="button" class="mui-btn mui-btn-primary form-submit">确&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+                <button type="button" class="mui-btn mui-btn-primary search-btn form-submit" @click="save">确&nbsp;&nbsp;&nbsp;&nbsp;定</button>
             </div>
         </div>
         <div class="card-box" v-show="tabSelected == 2" style="display: none">
-            <div class="mui-card">
+            <div class="mui-card" v-for="item in preorderVoList">
                 <div class="mui-card-content">
-                    <div class="card-title bottom-border-dashed">身份证办理</div>
+                    <div class="card-title bottom-border-dashed">{{item.name}}</div>
                     <div class="card-content bottom-border-dashed">
-                        <table width="100%">
-                            <tr>
-                                <td width="60px"><p class="label">预约时间</p></td>
-                                <td width="15px"><p class="label">：</p></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><p class="label">预约码</p></td>
-                                <td><p class="label">：</p></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><p class="label">预约状态</p></td>
-                                <td><p class="label">：</p></td>
-                                <td></td>
-                            </tr>
-                        </table>
+                        <p><span>预约时间：</span>{{item.time}}</p>
+                        <p><span>预约码：</span>{{item.id}}</p>
+                        <p v-if="item.status == 0"><span>预约状态：</span>待赴约</p>
+                        <p v-if="item.status == 1"><span>预约状态：</span>已赴约</p>
+                        <p v-if="item.status == 2"><span>预约状态：</span>未赴约</p>
+                        <p v-if="item.status == 3"><span>预约状态：</span>已取消</p>
                     </div>
-                    <div class="card-content">
-                        <table width="100%">
-                            <tr>
-                                <td width="60px"><p class="label">服务评价</p></td>
-                                <td width="15px"><p class="label">：</p></td>
-                                <td><div class="rate_ico"></div></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="btn-box">
-                        <button type="button" class="mui-btn mui-btn-primary card-btn">取消预约</button>
-                        <button type="button" class="mui-btn mui-btn-primary btn-cancel card-btn search-btn2">预约挂号</button>
-                        <button type="button" class="mui-btn mui-btn-primary card-btn">确&nbsp;&nbsp;定</button>
+                    <!--<div class="card-content">-->
+                    <!--<table width="100%">-->
+                    <!--<tr>-->
+                    <!--<td width="60px"><p class="label">服务评价</p></td>-->
+                    <!--<td width="15px"><p class="label">：</p></td>-->
+                    <!--<td>-->
+                    <!--<div class="rate_ico"></div>-->
+                    <!--</td>-->
+                    <!--</tr>-->
+                    <!--</table>-->
+                    <!--</div>-->
+                    <div class="btn-box" v-show="item.status == 0">
+                        <button type="button" class="mui-btn mui-btn-primary card-btn" @click="cancelOrder(item.id)">
+                            取消预约
+                        </button>
+                        <button type="button" :disabled="!(item.type == 0)" class="mui-btn mui-btn-primary card-btn"
+                                @click="getNumberByPreOrder(item)">预约抽号
+                        </button>
                     </div>
                     <div class="card-border-bottom"><img src="images/card-bottom.png"></div>
                 </div>
             </div>
         </div>
         <div class="card-box" v-show="tabSelected == 3" style="display: none">
-            <div class="mui-card">
+            <div class="mui-card" v-for="item in callNumberList">
                 <div class="mui-card-content">
-                    <div class="card-title bottom-border-dashed">身份证办理</div>
+                    <div class="card-title bottom-border-dashed">{{item.itemName}}</div>
                     <div class="card-content bottom-border-dashed">
-                        <table width="100%">
-                            <tr>
-                                <td width="60px"><p class="label">预约时间</p></td>
-                                <td width="15px"><p class="label">：</p></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><p class="label">预约码</p></td>
-                                <td><p class="label">：</p></td>
-                                <td></td>
-                            </tr>
-                            <tr>
-                                <td><p class="label">预约状态</p></td>
-                                <td><p class="label">：</p></td>
-                                <td></td>
-                            </tr>
-                        </table>
+                        <p><span>抽号时间：</span>{{item.createTime}}</p>
+                        <p><span>您的号码：</span>{{item.orderNo}}</p>
                     </div>
-                    <div class="card-content">
-                        <table width="100%">
-                            <tr>
-                                <td width="60px"><p class="label">服务评价</p></td>
-                                <td width="15px"><p class="label">：</p></td>
-                                <td><div class="rate_ico"></div></td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="btn-box">
-                        <button type="button" class="mui-btn mui-btn-primary card-btn">取消预约</button>
-                        <button type="button" class="mui-btn mui-btn-primary btn-cancel card-btn search-btn2">预约挂号</button>
-                        <button type="button" class="mui-btn mui-btn-primary card-btn">确&nbsp;&nbsp;定</button>
+                    <div class="btn-box" v-show="item.status == 0">
+                        <button type="button" class="mui-btn mui-btn-primary card-btn"
+                                v-show="item.itemId === '7999362586413056'" :id="'code_btn' + item.itemId"
+                                @click="createQRCode(item)">生成二维码
+                        </button>
+                        <button type="button" class="mui-btn mui-btn-primary card-btn"
+                                :disabled="!( item.status == 1 && item.type == 0)"
+                                @click="updateStatusToWait(item)">过号激活
+                        </button>
                     </div>
                     <div class="card-border-bottom"><img src="images/card-bottom.png"></div>
                 </div>
@@ -160,9 +151,19 @@
     </div>
     <div style="height: 48px"></div>
     <div class="return-btn-container">
-        <span class="return-btn"><a href="index.html" class="mui-icon mui-icon-left-nav" style="color: #fff;"></a>返回首页</span>
+        <a class="mui-icon mui-icon-left-nav" style="color: #fff;" href="index.html">
+            <span class="return-btn" style="vertical-align: baseline;">返回首页</span></a>
     </div>
 </div>
+
+<script src="js/vue.js"></script>
+<script src="js/moment.js"></script>
+<script src="js/bootstrap-datepicker.min.js"></script>
+<script src="js/bootstrap-datepicker.zh-CN.min.js"></script>
+<script src="js/validate.js"></script>
+<script src="js/GetInfoFromIdcard.js"></script>
+<script src="js/common.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
 </body>
 </html>
 <script type="text/babel">
@@ -172,11 +173,51 @@
     new Vue({
         el: '#app',
         data: {
-            tabSelected: 1
+            isShowHtml:false,
+            // apiUrl: 'http://lhsmzx.deyatong.com',
+            apiUrl: 'http://47.96.11.207',
+            distance: 200,
+            tabSelected: 1,
+            identityVo: {
+                idcardNo: undefined,
+                name: undefined,
+                gender: undefined,
+                birthday: undefined,
+                address: undefined,
+                phone: undefined,
+                wechatOpenid: undefined
+            },
+            preorderVo: {
+                identityId: undefined,
+                itemId: undefined,
+                itemName: undefined,
+                phone: undefined,
+                time: undefined,
+                timeSlot: undefined,
+                channel: 2,
+                status: 0,
+                wechatOpenid: undefined
+            },
+            preorderVoList: undefined,
+            page: 1,
+            rows: 30,
+            itemIds: undefined,
+            hardUrl: '',
+            callNumberList: undefined,
+            date: undefined,
+            hour: undefined,
+            nowDate: undefined,
+            nowHour: undefined,
         },
         methods: {
             selectTab(index) {
-                this.tabSelected = index
+                this.tabSelected = index;
+                if (index == 2) {
+                    this.showMyPreOrder()
+                }
+                if (index == 3) {
+                    this.showMyGetNumber()
+                }
             },
             initRaty() {
                 $(".rate_ico").raty({
@@ -196,10 +237,306 @@
                     // score: this.itemRateRead.rate,
                     readOnly: true
                 })
-            }
+            },
+            //微信认证
+            authorize: function () {
+                let code = getParam("code");
+                let _this = this;
+                $.ajax({
+                    method: "get",
+                    url: _this.apiUrl + "/web/api/number/authorize",
+                    data: "code=" + code,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200 && result.data != undefined) {
+                            if (result.data.subscribe && result.data.openId != null) {
+                                _this.isShowHtml = true;
+                                _this.weChatConfig.wechatOpenid = result.data.openId;
+                                _this.identityVo.wechatOpenid = result.data.openId;
+                                _this.preorderVo.wechatOpenid = result.data.openId;
+                                _this.getIdentityInfoByOpenId();
+                            } else {
+                                _this.isShowHtml = false;
+                                mui.alert("请先关注莲湖区市民中心公众号!");
+                            }
+                        }
+                    }
+                });
+            },
+
+            //签名
+            getJsapiTicket() {
+                let _this = this;
+                let url = encodeURIComponent(location.href.split('#')[0]);
+                $.ajax({
+                    method: "get",
+                    url: _this.apiUrl + "/web/api/number/jsapiSignature",
+                    data: "url=" + url,
+                    dataType: "json",
+                    success: function (result) {
+                        wx.config({
+                            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                            appId: result.data.appId, // 必填，公众号的唯一标识
+                            timestamp: result.data.timestamp, // 必填，生成签名的时间戳
+                            nonceStr: result.data.nonceStr, // 必填，生成签名的随机串
+                            signature: result.data.signature,// 必填，签名
+                            jsApiList: ['getLocation'] // 必填，需要使用的JS接口列表
+                        });
+                        wx.ready(function () {
+                            _this.getLocalNow();
+                        })
+                    }
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert(textStatus);
+                });
+            },
+            getLocalNow() {
+                let _this = this;
+                wx.getLocation({
+                    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                    success: function (res) {
+                        let la1 = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                        let lo1 = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                        // 坐标位置：莲湖区市民中心,34.2693997276,108.8841853772
+                        let la2 = "34.2693997276";
+                        let lo2 = "108.8841853772";
+                        //创新大厦
+                        // let la2= "34.2351417390";
+                        // let lo2 = "108.8989513235";
+                        _this.getDistance(lo1, la1, lo2, la2);
+
+                    }
+                });
+
+            },
+            getDistance(lo1, la1, lo2, la2) {
+                let La1 = la1 * Math.PI / 180.0;
+                let La2 = la2 * Math.PI / 180.0;
+                let La3 = La1 - La2;
+                let Lb3 = lo1 * Math.PI / 180.0 - lo2 * Math.PI / 180.0;
+                let s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(La3 / 2), 2) + Math.cos(La1) * Math.cos(La2) * Math.pow(Math.sin(Lb3 / 2), 2)));
+                s = s * 6378.137; //地球半径
+                s = Math.round(s * 10000) / 10000;
+                s = s * 1000;
+                this.distance = s;
+            },
+            checkLocation: function () {
+                if (this.distance > 200) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            //用户信息查询
+            getIdentityInfoByOpenId() {
+                let _this = this;
+                $.ajax({
+                    method: "get",
+                    url: _this.apiUrl + "/web/api/number/getIdentityInfoByOpenId",
+                    data: "wechatOpenid=" + _this.identityVo.wechatOpenid,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200 && result.data != undefined) {
+                            _this.identityVo = result.data;
+                            _this.preorderVo.identityId = result.data.id;
+                            _this.preorderVo.phone = result.data.phone;
+                        } else {
+                            _this.tipBindInfo();
+                        }
+                    },
+                    error: function () {
+                        alert('fail');
+                    }
+                });
+            },
+            //保存我的信息
+            save() {
+                if (!isIdCardNo(this.identityVo.idcardNo)) {
+                    mui.toast("身份证号输入不正确");
+                    return false;
+                }
+                if (!isPhoneNo(this.identityVo.phone)) {
+                    mui.toast("联系电话输入不正确");
+                    return false;
+                }
+                this.identityVo.gender = get_sex_from_idcard(this.identityVo.idcardNo);
+                this.identityVo.birthday = get_Birthday_from_idcard(this.identityVo.idcardNo);
+                this.identityVo.address = get_city_from_idcard(this.identityVo.idcardNo) + get_only_county_from_idcard(this.identityVo.idcardNo);
+                this.saveItemNumberUser();
+            },
+            saveItemNumberUser() {
+                let _this = this;
+                $.ajax({
+                    type: "post",
+                    url: _this.apiUrl + "/web/api/number/addOrEditIdentity",
+                    data: _this.identityVo,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200) {
+                            mui.alert("信息保存成功！");
+                        } else {
+                            mui.toast(result.msg);
+                        }
+                    }
+                });
+            },
+            showMyPreOrder: function () {
+                let _this = this;
+                let data = {page: _this.page, rows: _this.rows, id: _this.identityVo.id};
+                $.ajax({
+                    method: "get",
+                    url: _this.apiUrl + "/web/api/number/getNumberPreorderByIdentityId",
+                    data: data,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200 && result.data != null) {
+                            $.each(result.data.records, function (n, value) {
+                                let s = value.time.substring(0, 10) + " " + value.timeSlot;
+                                _this.date = value.time.substring(0, 10);
+                                _this.hour = value.timeSlot.substring(0, 2);
+                                _this.nowDate = moment(new Date()).format("YYYY-MM-DD");
+                                _this.nowHour = new Date().getHours();
+                                console.log(_this.nowDate == _this.date && _this.hour == _this.nowHour);
+                                if (_this.nowDate == _this.date && _this.hour == _this.nowHour) {
+                                    result.data.records[n].type = 0
+                                } else {
+                                    result.data.records[n].type = 2
+                                }
+                                result.data.records[n].time = s;
+                            });
+                            _this.preorderVoList = result.data.records;
+                        }
+                    }
+                });
+            },
+            //我的抽号
+            showMyGetNumber() {
+                let _this = this;
+                let data = {page: _this.page, rows: _this.rows, id: _this.identityVo.id};
+                $.ajax({
+                    url: _this.apiUrl + "/web/api/number/numberCallByIdentityId",
+                    method: "get",
+                    data: data,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200 && result.data != null) {
+                            _this.callNumberList = result.data.records;
+                            $.each(_this.callNumberList, function (n, value) {
+                                _this.date = value.createTime;
+                                _this.nowDate = moment(new Date()).format("YYYY-MM-DD");
+                                if (_this.nowDate == moment(_this.date).format("YYYY-MM-DD")) {
+                                    _this.callNumberList[n].type = 0
+                                } else {
+                                    _this.callNumberList[n].type = 2
+                                }
+                            });
+                        }
+                    }
+                });
+            },
+            //预约抽号
+            getNumberByPreOrder(item) {
+                let _this = this;
+                if (!this.checkLocation()) {
+                    mui.alert("请在莲湖区市民中心200米范围内抽号");
+                    return;
+                } else {
+                    let data = $.extend(_this.identityVo, {preOrderId: item.id}, {itemId: item.itemId});
+                    let inArray = $.inArray(item.itemId, _this.itemIds);
+                    if (inArray == -1) {
+                        _this.getNumber(data);
+                    } else {
+                        mui.alert("该事项已抽号，请勿重复抽号");
+                    }
+                }
+            },
+            //过号激活
+            updateStatusToWait(item) {
+                if (!this.checkLocation()) {
+                    mui.alert("请在莲湖区市民中心200米范围内抽号");
+                    return;
+                } else {
+                    if (item.orderNo.indexOf("G") >= 0) {
+                        this.hardUrl = 'http://172.16.6.224:1777/getno';
+                    }
+                    if (item.orderNo.indexOf("K") >= 0 || item.orderNo.indexOf("J") >= 0) {
+                        this.hardUrl = 'http://172.16.6.253:1777/getno';
+                    }
+                    if (item.orderNo.indexOf("L") >= 0) {
+                        this.hardUrl = 'http://172.16.6.233:1777/getno';
+                    }
+                    if (item.orderNo.indexOf("H") >= 0) {
+                        hardUrl = 'http://172.16.6.248:1777/getno';
+                    }
+                    if (item.orderNo.indexOf("D") >= 0 || item.orderNo.indexOf("E") >= 0) {
+                        this.hardUrl = 'http://172.16.6.227:1777/getno';
+                    }
+                    if (item.orderNo.indexOf("B") >= 0) {
+                        this.hardUrl = 'http://172.16.6.211:1777/getno';
+                    }
+                    if (item.orderNo.indexOf("A") >= 0) {
+                        this.hardUrl = 'http://172.16.6.222:1777/getno';
+                    }
+                    let numberVo = {
+                        itemId: item.itemId,
+                        itemName: item.itemName,
+                        state: 1,
+                        orderNo: item.orderNo,
+                        wechatOpenid: this.identityVo.wechatOpenid,
+                        url: this.hardUrl
+                    }
+                    $.ajax({
+                        type: "post",
+                        url: this.apiUrl + "/web/api/number/updateToWaitAndGetQueue",
+                        data: numberVo,
+                        dataType: "json",
+                        success: function (result) {
+                            if (result.status == 200) {
+                                mui.alert('激活成功！');
+                            }
+                        }
+                    });
+                }
+            },
+            //取消预约
+            cancelOrder(id) {
+                let _this = this;
+                $.ajax({
+                    url: _this.apiUrl + "/web/api/number/cancelOrder",
+                    data: "id=" + id,
+                    success: function (result) {
+                        if (result.status == 200) {
+                            mui.alert("取消成功!");
+                            _this.showMyPreOrder();
+                        }
+                    }
+                });
+            },
+            //二维码
+            createQRCode(item) {
+                $('#qrcode').empty();
+                new QRCode('qrcode', {
+                    width: 270,
+                    height: 270,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H,
+                    text: item.id
+                })
+                mui('.mui-popover').popover('toggle', document.getElementById('code_btn' + item.id))
+            },
         },
-        mounted() {
+        created() {
             this.initRaty();
+            if (isWeiXin()) {
+                //获取openId和是否关注标识
+                this.isShowHtml = true;
+                this.authorize();
+                this.getJsapiTicket();
+            } else {
+                mui.alert("请在微信公众号中打开此页面！");
+                this.isShowHtml = false;
+            }
         }
     })
 </script>
