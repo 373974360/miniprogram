@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title></title>
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script src="js/mui.min.js"></script>
+    <script src="js/com.util.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/qrcode.min.js"></script>
+    <link href="styles/m_styles/css/mui.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="styles/datepicker3.css">
+    <link rel="stylesheet" href="styles/m_styles/common.skin/common.css">
+    <link rel="stylesheet" href="styles/m_styles/app.skin/app.css?20181220">
+    <link rel="stylesheet" type="text/css" href="styles/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/wmh.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/app.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/bsdt.css"/>
+    <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+
+
+</head>
+<body style="background: transparent;">
+<div class="app">
+    <header class="mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"
+           style="color: #FFFFFF;padding: 15px;position: absolute;"></a>
+    </header>
+    <div class="mui-content"
+         style="background: url(images/bsdt-bjt.png) no-repeat center;background-size: 100% 100%;height: 500px;">
+        <div style="padding-top: 10%">
+            <div class="div-box1">
+                <div class="sancia-title" v-if="tab == 1">在线抽号</div>
+                <div class="sancia-title" v-if="tab == 2">预约抽号</div>
+                <div class="mui-line"></div>
+                <ul class="faceul">
+                    <li class="mui-col-xs-3 hz"
+                        @click="showItemPages('8021180485468160','http://172.16.6.222:1777/getno',$event)"><img
+                            src="images/hz.png"><span><a href="#">户&nbsp;&nbsp;政</a></span>
+                    </li>
+                    <li class="mui-col-xs-3 crj"
+                        @click="showItemPages('8007070054222336','http://172.16.6.211:1777/getno',$event)"><img
+                            src="images/crj.png"><span><a href="#">出入境</a></span></li>
+                    <li class="mui-col-xs-3 rcrs"
+                        @click="showItemPages('7999689870936064','http://172.16.6.227:1777/getno',$event)"><img
+                            src="images/rcrs.png"><span><a href="#">人才人社</a></span></li>
+                    <li class="mui-col-xs-3 jh"
+                        @click="showSpaItemPages('8000268167611904','http://172.16.6.248:1777/getno',$event,1)"><img
+                            src="images/jh.png"><span><a href="#">结&nbsp;&nbsp;婚</a></span></li>
+                    <li class="mui-col-xs-3 lh"
+                        @click="showSpaItemPages('8003710388110336','http://172.16.6.233:1777/getno',$event,1)"><img
+                            src="images/lh.png"><span><a href="#">离&nbsp;&nbsp;婚</a></span></li>
+                    <li class="mui-col-xs-3 sw"
+                        @click="showSpaItemPages('8049236260585984','http://172.16.6.224:1777/getno',$event,1)"><img
+                            src="images/sw.png"><span><a href="#">税&nbsp;&nbsp;务</a></span></li>
+                    <li class="mui-col-xs-3 spj"
+                        @click="showSpaItemPages('7999532585125888','http://172.16.6.253:1777/getno',$event,1)"><img
+                            src="images/spj.png"><span><a href="#">审批局</a></span></li>
+                    <li class="mui-col-xs-3 qt"
+                        @click="showItemPages('7999532027317248','http://172.16.6.253:1777/getno',$event)"><img
+                            src="images/qt.png"><span><a href="#">其&nbsp;&nbsp;他</a></span></li>
+                </ul>
+
+                <!--end-->
+            </div>
+        </div>
+    </div>
+    <div class="mui-content" style="background-color: #f7f7f700;position: absolute;top: 300px;">
+        <div class="mui-slider-item ulbd mui-active">
+            <div class="div-box2" v-if="!isShowItemList && initItemCategory">
+                <ul class="faceul1">
+                    <li class="mui-col-xs-3"  v-for="category in categoryList"
+                        @click="showItemList(category.id,'')"><span><a href="#">{{category.name}}</a></span></li>
+
+                </ul>
+            </div>
+            <div class="div-box2" v-if="isShowItemList && initItemCategory && tab==1">
+                <ul class="faceul1">
+                    <li class="mui-col-xs-3"  v-for="item in itemList"
+                        @click="showCallNumber(item.id)"><span><a href="#">{{item.name}}</a></span></li>
+                    <li class="mui-col-xs-3" v-if="isShowItemList && initItemCategory && tab==2" v-for="item in itemList"
+                        @click="showPreOrder(item)"><span><a href="#">{{item.name}}</a></span></li>
+                </ul>
+            </div>
+            <div class="div-box2" v-if="isShowItemList && initItemCategory && tab==2">
+                <ul class="faceul1">
+                    <li class="mui-col-xs-3" v-for="item in itemList"
+                        @click="showPreOrder(item)"><span><a href="#">{{item.name}}</a></span></li>
+                </ul>
+            </div>
+            <div class="" v-if="isShowPreOrderPage && !initItemCategory" style="margin-top: 20px;">
+                <div class="divs">
+                    <div class="imgs"><img src="images/yy-bg.png" alt=""></div>
+                    <div class="infos">预约事项：<span style="color: #f1355a;">{{preorderVo.name}}</span></div>
+                </div>
+                <div class="mui-card-content">
+                    <div class="mui-card-content-inner">
+                        <div class="m-yy-date u-tc font-size-14">
+                            <div class="m-yysd">
+                                <div class="divs1">
+                                    <div class="infos1">请选择预约日期：
+                                    </div>
+                                    <div class="infos1"><input id="yysj" name="yysj" type="text" class="laydate-icon"
+                                                               readonly="readonly"
+                                                               placeholder="预约时间" style="background-color: #f9f9f9;"></div>
+                                </div>
+                                <div  class="divs1">
+                                    <div class="infos1">请选择预约时间：
+                                    </div>
+                                    <div class="infos1">
+                                        <ul class="timeList">
+                                            <li v-for="time in timeList" @click="changeTime(time,$event)" class="left">
+                                                {{time}}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="mui-button-row" style="padding-bottom: 20px;">
+                        <input type="submit" value="确定" style="width: 55%;" @click="addPreorder"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+        </div>
+    </div>
+</div>
+<script src="js/vue.js"></script>
+<script src="js/moment.js"></script>
+<script src="js/bootstrap-datepicker.min.js"></script>
+<script src="js/bootstrap-datepicker.zh-CN.min.js"></script>
+<script src="js/validate.js"></script>
+<script src="js/GetInfoFromIdcard.js"></script>
+<script src="js/common.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+
+</body>
+</html>
+<script>
+    new Vue({
+        el: '.app',
+        data: {
+            isShowHtml: false,
+            currentTab: 1,
+            // apiUrl: 'http://lhsmzx.deyatong.com',
+            apiUrl: 'http://47.96.11.207',
+            // apiUrl: 'http://localhost:8765',
+            weChatConfig: {
+                appId: 'wx8c7270568dc7addd',
+                wechatOpenid: '',
+                hostUrl: 'http://lhsmzx.deyatong.com',
+                distance: 200
+            },
+            identityVo: {
+                idcardNo: undefined,
+                name: undefined,
+                gender: undefined,
+                birthday: undefined,
+                address: undefined,
+                phone: undefined,
+                wechatOpenid: undefined
+            },
+            categoryItemVo: {
+                categoryId: undefined,
+                page: 1,
+                size: 30
+            },
+            day: undefined,
+            categoryList: undefined,
+            initItemCategory: false,
+            isShowItemList: false,
+            page: 1,
+            rows: 30,
+            itemList: undefined,
+            itemIds: undefined,
+            categoryId: undefined,
+            hardUrl: '',
+            isShowMyGetNumber: false,
+            callNumberList: undefined,
+            isShowPreOrderPage: false,
+            date: undefined,
+            hour: undefined,
+            nowDate: undefined,
+            nowHour: undefined,
+            holidayList: [],
+            nextFiveWorkDates: [],
+            timeList: [],
+            timeList1: [],
+            countList: [],
+            isShowMyPreOrder: false,
+            preorderVo: {
+                identityId: undefined,
+                itemId: undefined,
+                itemName: undefined,
+                phone: undefined,
+                time: undefined,
+                timeSlot: undefined,
+                channel: 2,
+                status: 0,
+                wechatOpenid: undefined
+            },
+            preorderVoList: undefined,
+            isShowMyInfo: true,
+            isBind: false
+        },
+        methods: {
+            //微信认证
+            authorize: function () {
+                let code = getParam("code");
+                let _this = this;
+                $.ajax({
+                    method: "get",
+                    url: _this.apiUrl + "/web/api/number/authorize",
+                    data: "code=" + code,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200 && result.data != undefined) {
+                            if (result.data.subscribe && result.data.openId != null) {
+                                _this.isShowHtml = true;
+                                _this.weChatConfig.wechatOpenid = result.data.openId;
+                                _this.identityVo.wechatOpenid = result.data.openId;
+                                _this.preorderVo.wechatOpenid = result.data.openId;
+                                _this.getIdentityInfoByOpenId();
+                            } else {
+                                _this.isShowHtml = false;
+                                mui.alert("请先关注莲湖区市民中心公众号!");
+                            }
+                        }
+                    }
+                });
+            },
+            //用户信息查询
+            getIdentityInfoByOpenId() {
+                let _this = this;
+                $.ajax({
+                    method: "get",
+                    url: _this.apiUrl + "/web/api/number/getIdentityInfoByOpenId",
+                    data: "wechatOpenid=" + _this.identityVo.wechatOpenid,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200 && result.data != undefined) {
+                            _this.identityVo = result.data;
+                            _this.preorderVo.identityId = result.data.id;
+                            _this.preorderVo.phone = result.data.phone;
+                            _this.isBind = true;
+                        } else {
+                            _this.tipBindInfo();
+                        }
+                    },
+                    error: function () {
+                        alert('fail');
+                    }
+                });
+            },
+            //签名
+            getJsapiTicket() {
+                let _this = this;
+                let url = encodeURIComponent(location.href.split('#')[0]);
+                $.ajax({
+                    method: "get",
+                    url: _this.apiUrl + "/web/api/number/jsapiSignature",
+                    data: "url=" + url,
+                    dataType: "json",
+                    success: function (result) {
+                        wx.config({
+                            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                            appId: result.data.appId, // 必填，公众号的唯一标识
+                            timestamp: result.data.timestamp, // 必填，生成签名的时间戳
+                            nonceStr: result.data.nonceStr, // 必填，生成签名的随机串
+                            signature: result.data.signature,// 必填，签名
+                            jsApiList: ['getLocation'] // 必填，需要使用的JS接口列表
+                        });
+                        wx.ready(function () {
+                            _this.getLocalNow();
+                        })
+                    }
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert(textStatus);
+                });
+            },
+            getLocalNow() {
+                let _this = this;
+                wx.getLocation({
+                    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                    success: function (res) {
+                        let la1 = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                        let lo1 = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                        // 坐标位置：莲湖区市民中心,34.2693997276,108.8841853772
+                        let la2 = "34.2693997276";
+                        let lo2 = "108.8841853772";
+                        //创新大厦
+                        // let la2= "34.2351417390";
+                        // let lo2 = "108.8989513235";
+                        _this.getDistance(lo1, la1, lo2, la2);
+
+                    }
+                });
+
+            },
+            getDistance(lo1, la1, lo2, la2) {
+                let La1 = la1 * Math.PI / 180.0;
+                let La2 = la2 * Math.PI / 180.0;
+                let La3 = La1 - La2;
+                let Lb3 = lo1 * Math.PI / 180.0 - lo2 * Math.PI / 180.0;
+                let s = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(La3 / 2), 2) + Math.cos(La1) * Math.cos(La2) * Math.pow(Math.sin(Lb3 / 2), 2)));
+                s = s * 6378.137; //地球半径
+                s = Math.round(s * 10000) / 10000;
+                s = s * 1000;
+                this.weChatConfig.distance = s;
+            },
+            checkLocation: function () {
+                if (this.weChatConfig.distance > 200) {
+                    return false;
+                } else {
+                    return true;
+                }
+            },
+            //已抽号未办理
+            getItemIdsByPensonId: function () {
+                let _this = this;
+                $.ajax({
+                    url: _this.apiUrl + "/web/api/number/getItemIdsByIdentityId",
+                    dataType: 'json',
+                    data: {
+                        identityId: _this.identityVo.id
+                    },
+                    success: function (result) {
+                        if (result.status == 200) {
+                            _this.itemIds = result.data;
+                        } else {
+                            mui.alert(result.msg);
+                        }
+                    }
+                });
+            },
+
+            //事项分类
+            showItemPages(itemCategory, url, e) {
+                if (e == undefined) {
+                    $(".div-box1 li").first().addClass("hover");
+                }else {
+                    $(e.currentTarget).addClass('hover').siblings().removeClass('hover');
+                }
+                this.currentTab = 2;
+                let _this = this;
+                _this.initItemCategory = true;
+                _this.isShowItemList = false;
+                _this.isShowPreOrderPage = false;
+                _this.hardUrl = url;
+                $.ajax({
+                    url: _this.apiUrl + "/web/api/item/getCategoryByParentId",
+                    dataType: 'json',
+                    data: {
+                        categoryId: itemCategory
+                    },
+                    success: function (result) {
+                        if (result.status == 200) {
+                            _this.categoryList = result.data;
+                        } else {
+                            mui.alert(result.msg);
+                        }
+                    }
+                });
+            },
+            //分类下的事项
+            showSpaItemPages(itemCategory, url, e, d) {
+                if (d == 1) {
+                    $(e.currentTarget).addClass('hover').siblings().removeClass('hover');
+                }
+
+                let _this = this;
+                _this.initItemCategory = true;
+                _this.isShowItemList = true;
+                _this.isShowPreOrderPage = false;
+                if (url != '') {
+                    _this.hardUrl = url;
+                }
+                _this.itemCategory = itemCategory;
+                _this.getItemList();
+                _this.getItemIdsByPensonId();
+            },
+            showItemList(itemCategory, url) {
+                let _this = this;
+                _this.isShowItemList = true;
+                if (url != '') {
+                    _this.hardUrl = url;
+                }
+                _this.itemCategory = itemCategory;
+                _this.getItemList();
+                _this.getItemIdsByPensonId();
+            },
+            //事项列表
+            getItemList() {
+                let _this = this;
+                let categoryItemVo = {
+                    "categoryId": _this.itemCategory,
+                    "page": 1,
+                    "size": 30
+                };
+                $.ajax({
+                    // 根据分类编号检索事项信息
+                    url: _this.apiUrl + "/web/api/item/getItemsByCategoryId",
+                    type: "POST",
+                    dataType: "json",
+                    async: false,
+                    data: categoryItemVo,
+                    success: function (result) {
+                        if (result.status == 200) {
+                            _this.itemList = result.data.records;
+                        } else {
+                            mui.alert(result.msg);
+                        }
+                    }
+                });
+            },
+            //抽号
+            showCallNumber(itemId) {
+                this.getItemIdsByPensonId();
+                let _this = this;
+                if (!this.checkLocation()) {
+                    mui.alert("请在莲湖区市民中心200米范围内抽号");
+                    return;
+                }
+                if (_this.identityVo.idcardNo) {
+                    mui.alert("抽号成功之后,已叫号但您未办理,可前往个人中心-我的抽号进行激活,莲湖区市民中心200米范围内可激活", "重要提示", "点击抽号", function () {
+                        let extend = $.extend(_this.identityVo, {preorderNumber: ""}, {itemId: itemId}, {url: _this.hardUrl});
+                        let inArray = $.inArray(itemId, _this.itemIds);
+                        if (inArray == -1) {
+                            _this.getNumber(extend);
+                        } else {
+                            mui.alert("该事项已抽号，请耐心等待叫号");
+                        }
+                    })
+                } else {
+                    this.tipBindInfo();
+                }
+            },
+            getNumber: function (data) {
+                if (this.getNowTime() > "23:59") {
+                    mui.alert("亲爱的市民朋友们，市民中心一天的工作已经结束，如您还有需要办理的事项，请您进入在线预约，选择其他时间办理。");
+                } else {
+                    const _this = this
+                    // 如果事项是结婚登记，提示输入一句话
+                    if (data.itemId === '7999362586413056') {
+                        mui.prompt('请输入留言', '莲花并蒂开，情心相印；梧枝连理栽，灵犀互通！祝你们百年好合，比翼双飞！', '结婚登记', ['确定'], function ({index, value}) {
+                            if (!value) {
+                                value = '莲花并蒂开，情心相印；梧枝连理栽，灵犀互通！祝你们百年好合，比翼双飞！'
+                            }
+                            data = $.extend(data, {remark: value})
+                            _this.doGetNumber(data)
+                        })
+                    } else {
+                        this.doGetNumber(data)
+                    }
+                }
+            },
+            doGetNumber: function (data) {
+                $.ajax({
+                    type: "post",
+                    url: this.apiUrl + "/web/api/number/callNumber",
+                    data: data,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200) {
+                            if (data.itemId === '7999362586413056') {
+                                mui.alert('抽号成功，请您注意微信消息推送！\n凭个人中心我的抽号中的二维码在抽号机上打印留言小票');
+                            } else {
+                                mui.alert('抽号成功，请您注意微信消息推送！');
+                            }
+                        } else {
+                            mui.alert(result.msg);
+                        }
+                    }
+                });
+            },
+            getNowTime: function () {
+                let time = new Date();
+                let hour = time.getHours();
+                let minutes = time.getMinutes();
+                hour < 10 ? hour = '0' + hour : hour;
+                minutes < 10 ? minutes = '0' + minutes : minutes;
+                return hour + ':' + minutes;
+            },
+            //预约
+            showPreOrder(item) {
+                let _this = this;
+                _this.isShowPreOrderPage = true;
+                _this.preorderVo.itemId = item.id;
+                _this.preorderVo.name = item.name;
+                // if (this.identityVo.idcardNo) {
+                mui.alert("预约成功之后，请务必于预约时间段内前往个人中心-我的预约进行预约抽号，莲湖区市民中心200米范围内可预约抽号", "重要提示", "确定", function () {
+                    _this.initItemCategory = false;
+                    if (item.days == undefined) {
+                        mui.alert("对不起，该事项不能预约")
+                    } else {
+                        _this.timeList = item.timeSlot.split(','); //原时间段
+                        _this.timeList1 = item.timeSlot.split(',');
+                        _this.timeList.sort(function (a, b) {
+                            let aa = a.substr(0, 2);
+                            let bb = b.substr(0, 2);
+                            return aa - bb
+                        });
+                        _this.days = item.days; //可预约天数
+                        _this.countList = item.counts.split(','); //预约人数
+                        _this.timeIdList = item.timeId.split(','); //时间段id
+                        _this.getHoliday();
+                        // _this.getPreOrderBlcakByIdentityId();
+                    }
+
+                })
+                // } else {
+                //     this.tipBindInfo();
+                // }
+            },
+            getHoliday() {
+                let _this = this;
+                $.ajax({
+                    url: _this.apiUrl + "/web/api/admin/listByHoliday",
+                    data: {"year": new Date().getFullYear()},
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200) {
+                            for (let holiday of result.data) {
+                                _this.holidayList.push(moment(holiday.date).format('YYYY-MM-DD'));
+                            }
+                            _this.initDatePicker();
+                        } else {
+                            mui.alert(result.msg);
+                        }
+                    }
+                });
+            },
+            initDatePicker() {
+                const _this = this;
+                _this.nextFiveWorkDays();
+                $("#yysj").datepicker({
+                    startDate: _this.nextFiveWorkDates[0],
+                    endDate: _this.nextFiveWorkDates[_this.day],
+                    datesDisabled: _this.holidayList,
+                    language: "zh-CN",
+                    autoclose: true,
+                    format: "yyyy-mm-dd"
+                }).on('changeDate', function (e) {
+                    _this.preorderVo.time = $("#yysj").val();
+                    _this.preorderVo.time = moment(_this.preorderVo.time).format("YYYY-MM-DD");
+                });
+            },
+            changeTime(time, e) {
+                let _this = this;
+                $.each(_this.timeList1, function (index, value) {
+                    if (time == value) {
+                        _this.preorderVo.count = _this.countList[index];
+                        _this.preorderVo.timeId = _this.timeIdList[index];
+                    }
+                });
+                _this.preorderVo.timeSlot = time;
+                $(e.currentTarget).addClass('hover').siblings().removeClass('hover');
+            },
+            nextFiveWorkDays: function () {
+                let _this = this;
+                _this.nextFiveWorkDates = [];
+                let day = new Date();
+                for (let i = 0; i < _this.days; i++) {
+                    _this.day = i;
+                    _this.nextFiveWorkDates.push(_this.nextWorkDay(day));
+                }
+            },
+            nextWorkDay(day) {
+                day.setDate(day.getDate() + 1);
+                let date = moment(day).format('YYYY-MM-DD');
+                if (!this.holidayList.includes(date)) {
+                    return date;
+                }
+                return this.nextWorkDay(day);
+            },
+            //是否黑名单用户
+            getPreOrderBlcakByIdentityId: function () {
+                let _this = this;
+                $.ajax({
+                    method: "get",
+                    url: _this.apiUrl + "/web/api/number/getPreOrderBlcakByIdentityId",
+                    data: {
+                        identityId: _this.identityVo.id
+                    },
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200 && result.data == 0) {
+                            _this.isShowHtml = true;
+                        } else {
+                            mui.alert("您已是黑名单用户，不能进行预约操作！");
+                            _this.isShowHtml = false;
+                        }
+
+                    }
+                });
+            },
+            //新增预约
+            addPreorder() {
+                this.getItemIdsByPensonId();
+                //用户编号、事项编号、时间段编号、预约时间、渠道、办理地点、状态（等待赴约0）
+                if (!this.preorderVo.time) {
+                    mui.alert("请选择预约时间");
+                    return false;
+                }
+                if (!this.preorderVo.timeId) {
+                    mui.alert("请选择预约时段");
+                    return false;
+                }
+                $.ajax({
+                    type: "post",
+                    url: this.apiUrl + "/web/api/number/addPreorder",
+                    dataType: 'json',
+                    data: this.preorderVo,
+                    success: function (result) {
+                        if (result.message == "OK") {
+                            mui.alert("预约成功");
+                        } else {
+                            mui.alert(result.message);
+                        }
+
+                    }
+                });
+            },
+            //我的抽号
+            showMyGetNumber() {
+                let _this = this;
+                _this.isShowMyGetNumber = true;
+                _this.isShowMyPreOrder = false;
+                _this.isShowMyInfo = false;
+                let data = {page: _this.page, rows: _this.rows, id: _this.identityVo.id};
+                $.ajax({
+                    url: _this.apiUrl + "/web/api/number/numberCallByIdentityId",
+                    method: "get",
+                    data: data,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200 && result.data != null) {
+                            _this.callNumberList = result.data.records;
+                            $.each(_this.callNumberList, function (n, value) {
+                                _this.date = value.createTime;
+                                _this.nowDate = moment(new Date()).format("YYYY-MM-DD");
+                                if (_this.nowDate == moment(_this.date).format("YYYY-MM-DD")) {
+                                    _this.callNumberList[n].type = 0
+                                } else {
+                                    _this.callNumberList[n].type = 2
+                                }
+                            });
+                        }
+                    }
+                });
+            },
+            //我的预约
+            showMyPreOrder: function () {
+                let _this = this;
+                _this.isShowMyGetNumber = false;
+                _this.isShowMyPreOrder = true;
+                _this.isShowMyInfo = false;
+                let data = {page: _this.page, rows: _this.rows, id: _this.identityVo.id};
+                $.ajax({
+                    method: "get",
+                    url: _this.apiUrl + "/web/api/number/getNumberPreorderByIdentityId",
+                    data: data,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200 && result.data != null) {
+                            $.each(result.data.records, function (n, value) {
+                                let s = value.time.substring(0, 10) + " " + value.timeSlot;
+                                _this.date = value.time.substring(0, 10);
+                                _this.hour = value.timeSlot.substring(0, 2);
+                                _this.nowDate = moment(new Date()).format("YYYY-MM-DD");
+                                _this.nowHour = new Date().getHours();
+                                console.log(_this.nowDate == _this.date && _this.hour == _this.nowHour);
+                                if (_this.nowDate == _this.date && _this.hour == _this.nowHour) {
+                                    result.data.records[n].type = 0
+                                } else {
+                                    result.data.records[n].type = 2
+                                }
+                                result.data.records[n].time = s;
+                            });
+                            _this.preorderVoList = result.data.records;
+                        }
+                    }
+                });
+            },
+            //二维码
+            createQRCode(item) {
+                $('#qrcode').empty();
+                new QRCode('qrcode', {
+                    width: 270,
+                    height: 270,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.H,
+                    text: item.id
+                })
+                mui('.mui-popover').popover('toggle', document.getElementById('code_btn' + item.id))
+            },
+            //过号激活
+            updateStatusToWait(item) {
+                if (!this.checkLocation()) {
+                    mui.alert("请在莲湖区市民中心200米范围内抽号");
+                    return;
+                } else {
+                    if (item.orderNo.indexOf("G") >= 0) {
+                        this.hardUrl = 'http://172.16.6.224:1777/getno';
+                    }
+                    if (item.orderNo.indexOf("K") >= 0 || item.orderNo.indexOf("J") >= 0) {
+                        this.hardUrl = 'http://172.16.6.253:1777/getno';
+                    }
+                    if (item.orderNo.indexOf("L") >= 0) {
+                        this.hardUrl = 'http://172.16.6.233:1777/getno';
+                    }
+                    if (item.orderNo.indexOf("H") >= 0) {
+                        hardUrl = 'http://172.16.6.248:1777/getno';
+                    }
+                    if (item.orderNo.indexOf("D") >= 0 || item.orderNo.indexOf("E") >= 0) {
+                        this.hardUrl = 'http://172.16.6.227:1777/getno';
+                    }
+                    if (item.orderNo.indexOf("B") >= 0) {
+                        this.hardUrl = 'http://172.16.6.211:1777/getno';
+                    }
+                    if (item.orderNo.indexOf("A") >= 0) {
+                        this.hardUrl = 'http://172.16.6.222:1777/getno';
+                    }
+                    let numberVo = {
+                        itemId: item.itemId,
+                        itemName: item.itemName,
+                        state: 1,
+                        orderNo: item.orderNo,
+                        wechatOpenid: this.identityVo.wechatOpenid,
+                        url: this.hardUrl
+                    }
+                    $.ajax({
+                        type: "post",
+                        url: this.apiUrl + "/web/api/number/updateToWaitAndGetQueue",
+                        data: numberVo,
+                        dataType: "json",
+                        success: function (result) {
+                            if (result.status == 200) {
+                                mui.alert('激活成功！');
+                            }
+                        }
+                    });
+                }
+            },
+            //取消预约
+            cancelOrder(id) {
+                let _this = this;
+                $.ajax({
+                    url: _this.apiUrl + "/web/api/number/cancelOrder",
+                    data: "id=" + id,
+                    success: function (result) {
+                        if (result.status == 200) {
+                            mui.alert("取消成功!");
+                            _this.showMyPreOrder();
+                        }
+                    }
+                });
+            },
+            //预约抽号
+            getNumberByPreOrder(item) {
+                let _this = this;
+                if (!this.checkLocation()) {
+                    mui.alert("请在莲湖区市民中心200米范围内抽号");
+                    return;
+                } else {
+                    let data = $.extend(_this.identityVo, {preOrderId: item.id}, {itemId: item.itemId});
+                    let inArray = $.inArray(item.itemId, _this.itemIds);
+                    if (inArray == -1) {
+                        _this.getNumber(data);
+                    } else {
+                        mui.alert("该事项已抽号，请勿重复抽号");
+                    }
+                }
+            },
+            //我的信息
+            showMyInfo() {
+                let _this = this;
+                _this.isShowMyGetNumber = false;
+                _this.isShowMyPreOrder = false;
+                _this.isShowMyInfo = true;
+            },
+            //保存我的信息
+            save() {
+                if (!isIdCardNo(this.identityVo.idcardNo)) {
+                    mui.toast("身份证号输入不正确");
+                    return false;
+                }
+                if (!isPhoneNo(this.identityVo.phone)) {
+                    mui.toast("联系电话输入不正确");
+                    return false;
+                }
+                this.identityVo.gender = get_sex_from_idcard(this.identityVo.idcardNo);
+                this.identityVo.birthday = get_Birthday_from_idcard(this.identityVo.idcardNo);
+                this.identityVo.address = get_city_from_idcard(this.identityVo.idcardNo) + get_only_county_from_idcard(this.identityVo.idcardNo);
+                this.saveItemNumberUser();
+            },
+            saveItemNumberUser() {
+                let _this = this;
+                $.ajax({
+                    type: "post",
+                    url: _this.apiUrl + "/web/api/number/addOrEditIdentity",
+                    data: _this.identityVo,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200) {
+                            mui.alert("信息保存成功！");
+                        } else {
+                            mui.toast(result.msg);
+                        }
+                    }
+                });
+            },
+            tipBindInfo: function () {
+                mui.alert("请前往个人中心绑定身份信息<br>", "重要提示", "确定", function () {
+                    location.href = "grzx.html"
+                })
+            }
+        },
+        created() {
+            // if (isWeiXin()) {
+            if (this.getNowTime() > "23:59") {
+                mui.alert("亲爱的市民朋友们，市民中心一天的工作已经结束，如您还有需要办理的事项，请您进入在线预约，选择其他时间办理。");
+            }
+            //获取openId和是否关注标识
+            //  this.authorize();
+            // this.tab = getParam("currentTab");
+            this.tab = 2;
+            this.showItemPages('8021180485468160', 'http://172.16.6.222:1777/getno',undefined);
+            // this.getJsapiTicket();
+            // } else {
+            //     mui.alert("请在微信公众号中打开此页面！");
+            // }
+        }
+    });
+</script>
