@@ -25,7 +25,14 @@
 .btn-cancel { background-color: #bfbfbf; border: 1px solid #bfbfbf }
 .btn-cancel.mui-active:enabled, .btn-cancel:enabled:active { color: #fff; border: 1px solid #9b9b9b; background-color: #9b9b9b; }
 
-.card-title { border-bottom: 1px dashed #d0d0d0; padding: 14px; color: #1d7df2; font-size: 16px; }
+.zhcx-body .mui-card { margin: 0 20px }
+
+.mui-card { -moz-box-shadow:0 0 15px #d0d0d0; -webkit-box-shadow:0 0 15px #d0d0d0; box-shadow:0 0 15px #d0d0d0; }
+.mui-card-content { padding: 10px 15px }
+
+.bottom-border-dashed { border-bottom: 1px dashed #d0d0d0; }
+
+.card-title { padding: 14px; color: #1d7df2; font-size: 16px; width: 100% }
 .card-title img { height: 16px; vertical-align: middle }
 .card-title .title-text { display: inline-block; margin-left: 8px; vertical-align: middle }
 
@@ -56,11 +63,26 @@
 .grzx-body { margin-top: -45%; }
 
 .form-container { width: 70%; margin: auto }
-.form-item { margin-top: 12px; border-bottom: 1px solid #d0d0d0; height: 54px; position: relative }
-.form-item img { position: absolute; left: 0; margin: 10px 0 }
-.form-item input { position: absolute; left: 50px; height: 36px; margin: 8px; border: none; font-size: 20px; }
-.form-submit { padding: 10px 0; width: 60%; height: 48px; font-size: 20px }
+.form-item { margin-top: 12px; border-bottom: 1px solid #d0d0d0; height: 50px; position: relative }
+.form-item img { position: absolute; left: 0; margin: 12px 0; width: 24px }
+.form-item input { position: absolute; left: 36px; height: 36px; margin: 8px; border: none; font-size: 20px; }
+.form-submit { padding: 10px 0; width: 80%; height: 48px; font-size: 20px }
 
+.card-box { width: 80%; margin: 22px auto }
+.card-box .card-title { padding-top: 8px; text-align: center }
+.card-content { padding: 12px 20px; }
+.card-content tr { height: 30px }
+.card-content .label { font-size: 14px; font-weight: bold; color: #1b1b1b; }
+.card-content p { margin: 0 }
+
+.rate_ico { width: 100% !important; }
+.rate_ico img { width: 15% }
+
+.btn-box { text-align: center; margin-bottom: 10px }
+.card-btn { width: 36%; }
+.card-border-bottom { position: absolute; left: 0; bottom: -20px; width: 100% }
+.card-border-bottom img { width: 100% }
+.card-box .mui-card { overflow: visible }
 .mui-line { margin: 0 auto; border-top: 1px solid #ffffff; text-align: center; width: 36px }
 
 .con_box {
