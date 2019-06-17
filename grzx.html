@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="styles/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/wmh.css"/>
+    <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/browser.min.js"></script>
+</head>
+<body style="background: #ffffff">
+<div id="app">
+    <header>
+        <div class="mui-titlea">
+            <img src="images/bjt.png">
+            <div class="return-tag">
+                <span class="return-btn" style="font-size: 13px">
+                    <a class="mui-icon mui-icon-left-nav" style="font-size: 16px; color: #fff;"></a>
+                    &nbsp;&nbsp;返回首页
+                </span>
+            </div>
+            <div class="grzx-top-container">
+                <div class="title">个人中心</div>
+                <div class="mui-line"></div>
+                <div>
+                    <div class="item-container" @click="selectTab(1)">
+                        <div :class="['item-img-container', {'item-selected': tabSelected == 1}]">
+                            <div class="item-img">
+                                <img src="images/ico-wdxx.png">
+                            </div>
+                        </div>
+                        <div class="item-text">我的信息</div>
+                    </div>
+                    <div class="item-container" @click="selectTab(2)">
+                        <div :class="['item-img-container', {'item-selected': tabSelected == 2}]">
+                            <div class="item-img">
+                                <img src="images/ico-wdyy.png">
+                            </div>
+                        </div>
+                        <div class="item-text">我的预约</div>
+                    </div>
+                    <div class="item-container" @click="selectTab(3)">
+                        <div :class="['item-img-container', {'item-selected': tabSelected == 3}]">
+                            <div class="item-img">
+                                <img src="images/ico-wdch.png">
+                            </div>
+                        </div>
+                        <div class="item-text">我的抽号</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="grzx-body">
+        <div class="search-box" v-show="tabSelected == 1" style="display: none">
+            <div class="search-row search-title">信息绑定</div>
+            <div class="form-container">
+                <div class="form-item">
+                    <img src="images/name.png">
+                    <input placeholder="请输入姓名">
+                </div>
+                <div class="form-item">
+                    <img src="images/card.png">
+                    <input placeholder="请输入身份证号">
+                </div>
+                <div class="form-item">
+                    <img src="images/phone.png">
+                    <input placeholder="请输入电话号码">
+                </div>
+                <div style="height: 20px"></div>
+                <button type="button" class="mui-btn mui-btn-primary search-btn form-submit">确&nbsp;&nbsp;&nbsp;&nbsp;定</button>
+            </div>
+        </div>
+        <div v-show="tabSelected == 2" style="display: none">
+            <div class="mui-card">
+                <div class="mui-card-header">
+                    <div class="title">身份证办理</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="height: 48px"></div>
+    <div class="return-btn-container">
+        <span class="return-btn"><a class="mui-icon mui-icon-left-nav" style="color: #fff;"></a>返回首页</span>
+    </div>
+</div>
+</body>
+</html>
+<script type="text/babel">
+    mui.init({
+        swipeBack: true //启用右滑关闭功能
+    });
+    new Vue({
+        el: '#app',
+        data: {
+            tabSelected: 1
+        },
+        methods: {
+            selectTab(index) {
+                this.tabSelected = index
+            }
+        }
+    })
+</script>

@@ -17,7 +17,7 @@
 
 .search-box { text-align: center; padding: 20px 0; }
 .search-row { margin: 20px 0; }
-.search-title { color: #1d7df2; font-size: 20px; height: 30px; line-height: 30px; }
+.search-title { color: #1d7df2; font-size: 24px; height: 30px; line-height: 30px; }
 .search-input { background-color: #eeeeee; height: 38px; width: 80%; border: 1px solid #dddddd; padding: 8px 12px; text-align: center }
 .search-input:focus { text-align: left }
 .search-btn { width: 25%; height: 36px; }
@@ -41,10 +41,27 @@
 .logistics-list ul li.last .content { border: none; }
 .logistics-list p { margin: 10px 0; }
 
-
 .return-tag { position: absolute; top: 12px; left: 12px }
 .return-btn-container { width: 100%; position: fixed; bottom: 0; background: #3e90f4; height: 48px; line-height: 48px; text-align: center; }
 .return-btn { vertical-align: middle; cursor: pointer; font-family: 'Arial Normal', 'Arial'; font-weight: 400; font-style: normal; font-size: 16px; text-align: center; color: #ffffff; }
+
+.grzx-top-container { position: absolute; top: 6%; width: 100%; text-align: center; color: #ffffff }
+.grzx-top-container .title { font-size: 24px; font-weight: 400; height: 45px; line-height: 45px }
+.grzx-top-container .item-container { float: left; width: 20%; margin: 10px 0 0 10%; }
+.grzx-top-container .item-container .item-img-container { width: 100%; height: 20vw; border-radius: 10px; display: flex; }
+.grzx-top-container .item-container .item-img-container .item-img { width: 40%; margin: auto; }
+.grzx-top-container .item-container .item-text { font-size: 18px; height: 36px; line-height: 36px; }
+.item-selected { background: linear-gradient(to top, #f5607e, #f19cac); }
+
+.grzx-body { margin-top: -45%; }
+
+.form-container { width: 70%; margin: auto }
+.form-item { margin-top: 12px; border-bottom: 1px solid #d0d0d0; height: 54px; position: relative }
+.form-item img { position: absolute; left: 0; margin: 10px 0 }
+.form-item input { position: absolute; left: 50px; height: 36px; margin: 8px; border: none; font-size: 20px; }
+.form-submit { padding: 10px 0; width: 60%; height: 48px; font-size: 20px }
+
+.mui-line { margin: 0 auto; border-top: 1px solid #ffffff; text-align: center; width: 36px }
 
 .con_box {
 	position: fixed;
