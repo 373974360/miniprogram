@@ -9,6 +9,9 @@
     <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/vue.js"></script>
     <script src="js/browser.min.js"></script>
+    <script src="/js/promise.min.js"></script>
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script src="js/moment.js"></script>
 </head>
 <body style="background: #ffffff">
 <div id="app">
@@ -27,7 +30,7 @@
         <div class="search-box">
             <div class="search-row search-title">办件物流查询</div>
             <div class="search-row">
-                <input type="text" placeholder="请输入搜索关键词"/>
+                <input type="text" v-model="workNo" placeholder="请输入办件编号"/>
             </div>
             <div class="search-row">
                 <button type="button" class="mui-btn mui-btn-primary search-btn" @click="search">查&nbsp;&nbsp;询</button>
@@ -39,71 +42,17 @@
                 <div>
                     <div class="card-title bottom-border-dashed">
                         <img src="images/tuding.png">
-                        <div class="title-text">建筑工程规划条件核实合格通知书核发</div>
+                        <div class="title-text">{{itemName}}</div>
                     </div>
                     <div class="logistics-list">
                         <ul>
-                            <li class="first">
+                            <li v-for="(item, index) in records" :class="(index == 0 ? 'first' : '') + ' ' + (index == records.length - 1 ? 'last' : '')">
                                 <div class="node-container">
                                     <div class="node"></div>
                                 </div>
                                 <div class="content">
-                                    <p>投递并签收，签收人：他人收 </p>
-                                    <p>2019-06-14 12:30:03</p>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="node-container">
-                                    <div class="node"></div>
-                                </div>
-                                <div class="content">
-                                    <p>西安港务区揽投部安排投递（投递员姓名：候阿列;联系电话：18392983792）</p>
-                                    <p>2019-06-14 08:19:03</p>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="node-container">
-                                    <div class="node"></div>
-                                </div>
-                                <div class="content">
-                                    <p>到达西安港务区揽投部</p>
-                                    <p>2019-06-14 07:00:42</p>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="node-container">
-                                    <div class="node"></div>
-                                </div>
-                                <div class="content">
-                                    <p>离开中国邮政速递物流股份有限公司西安市同城邮件处理中心 发往西安港务区揽投部</p>
-                                    <p>2019-06-13 23:20:10</p>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="node-container">
-                                    <div class="node"></div>
-                                </div>
-                                <div class="content">
-                                    <p>到达中国邮政速递物流股份有限公司西安市同城邮件处理中心 处理中心</p>
-                                    <p>2019-06-13 21:01:10</p>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="node-container">
-                                    <div class="node"></div>
-                                </div>
-                                <div class="content">
-                                    <p>离开西安港务区揽投部 发往西安市</p>
-                                    <p>2019-06-13 19:57:43</p>
-                                </div>
-                            </li>
-                            <li class="last">
-                                <div class="node-container">
-                                    <div class="node"></div>
-                                </div>
-                                <div class="content">
-                                    <p>西安港务区揽投部已收件，（揽投员姓名：胡歆;联系电话：18292862133 ）</p>
-                                    <p>2019-06-13 17:50:00</p>
+                                    <p>[{{item.status | recordStatus}}] {{item.option}}</p>
+                                    <p>{{item.operateTime | date('YYYY-MM-DD HH:mm:ss')}}</p>
                                 </div>
                             </li>
                         </ul>
@@ -127,12 +76,97 @@
     new Vue({
         el: '#app',
         data: {
+            // apiUrl: 'http://lhsmzx.deyatong.com',
+            apiUrl: 'http://47.96.11.207',
+            workNo: undefined,
+            itemName: undefined,
+            records: [],
             cardVisible: false
+        },
+        filters: {
+            recordStatus(value) {
+                const recordStatusMap = {
+                    1: '等待预审',
+                    2: '整改',
+                    3: '通过审核',
+                    4: '不予受理',
+                    10: '在办',
+                    15: '办结',
+                    99: '不予受理',
+                };
+                return recordStatusMap[value] || value;
+            },
+            date(value, format) {
+                if (value) {
+                    return moment(value).format(format)
+                }
+                return ''
+            }
         },
         methods: {
             search() {
-                this.cardVisible = true
-            }
+                this.cardVisible = false;
+                this.records = [];
+                if (!this.workNo) {
+                    return false;
+                }
+                Promise.all([this.getPreauditDetails(this.workNo), this.getHandlingDetails(this.workNo)]).then(data => {
+                    const preaudit = data[0];
+                    const handling = data[1];
+                    if (preaudit) {
+                        this.records.push({
+                            status: '提交预审',
+                            option: '',
+                            operateTime: preaudit.createTime
+                        });
+                        this.records.push.apply(this.records, preaudit.preauditResonVoList);
+                        this.itemName = preaudit.itemName;
+                        this.cardVisible = true;
+                    }
+                    if (handling) {
+                        this.records.push.apply(this.records, handling.handlingResonVoList);
+                        this.itemName = handling.itemName;
+                        this.cardVisible = true;
+                    }
+                    this.records.reverse();
+                });
+            },
+            getPreauditDetails(workNo) {
+                const _this = this;
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                        method: "get",
+                        url: _this.apiUrl + "/web/api/preaudit/getPreauditRecordWithResons",
+                        data: {workNo},
+                        dataType: "json",
+                        success: function (result) {
+                            if (result.status == 200) {
+                                resolve(result.data)
+                            } else {
+                                reject(result.message)
+                            }
+                        }
+                    });
+                })
+            },
+            getHandlingDetails(workNo) {
+                const _this = this;
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                        method: "get",
+                        url: _this.apiUrl + "/web/api/handling/getHandlingRecordWithResons",
+                        data: {workNo},
+                        dataType: "json",
+                        success: function (result) {
+                            if (result.status == 200) {
+                                resolve(result.data)
+                            } else {
+                                reject(result.message)
+                            }
+                        }
+                    });
+                })
+            },
         }
     })
 </script>
