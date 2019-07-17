@@ -20,23 +20,20 @@
 }
 
 .div-bottom li {
-    background: #e4f0fe;
-    border-radius: 12px;
     list-style-type: none;
     float: left;
-    margin-bottom: 10px;
-    margin-left: 5px;
-    margin-right: 5px;
-    padding-bottom: 10px;
+    text-align:center;
+    width:33%;
     border: 1px;
-    width: 100px;
-    height: 70px;
+    margin:5px 0px 0px 0px;
 }
 
-.div-bottom li:hover {
+.div-bottom p:hover {
     background: -webkit-gradient(linear, 0 0, 0 bottom, from(#51a1fe), to(#1f7ce7));
     border-radius: 12px;
-
+}
+.div-bottom{
+    text-align:center;
 }
 
 .top-faceul {
@@ -56,29 +53,35 @@
     font-size: 15px;
     display: block;
     text-align: center;
-    padding-top: 5px;
+    margin-top:10px;
+    padding-top: 45px;
 }
 
 .top-faceul a {
     color: #ffffff;
+    text-align: justify;
 }
 
 .bottom-faceul {
-    height: auto;
     display: block;
     overflow: hidden;
-    padding: 0 10px;
+    padding:0 15px 10px 15px;
 }
 
-.bottom-faceul span {
+.bottom-faceul p {
     font-size: 15px;
     display: block;
     text-align: center;
-    padding-top: 23px;
-    line-height: 27px;
+    line-height: 70px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    width:90%;
+    margin:0 auto;
+    background: #e4f0fe;
+    border-radius: 12px;
+    padding:0px 5px 0px 5px;
+    font-size:14px;
 }
 
 .bottom-faceul a {
@@ -149,8 +152,33 @@
     margin-top: 20px;
 }
 .mui-content{
-    background-color: #f7f7f700;
+    background-color: #FFF;
 }
 #yysj{
     background-color: #f9f9f9;
+}
+
+.hz{
+    background: url("../images/hz.png") no-repeat top center;
+ }
+.crj{
+    background: url("../images/crj.png") no-repeat top center;
+}
+.rcrs{
+    background: url("../images/rcrs.png") no-repeat top center;
+}
+.jh{
+    background: url("../images/jh.png") no-repeat top center;
+}
+.lh{
+    background: url("../images/lh.png") no-repeat top center;
+}
+.sw{
+    background: url("../images/sw.png") no-repeat top center;
+}
+.spj{
+    background: url("../images/spj.png") no-repeat top center;
+}
+.qt{
+    background: url("../images/qt.png") no-repeat top center;
 }

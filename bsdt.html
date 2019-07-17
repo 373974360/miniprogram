@@ -20,7 +20,7 @@
     <link rel="stylesheet" type="text/css" href="styles/bsdt.css"/>
     <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
 </head>
-<body style="background: transparent;">
+<body style="background: #FFF;">
 <div class="app" v-if="isShowHtml">
     <div class="mui-content">
         <div class="content-top">
@@ -29,31 +29,38 @@
                 <div class="sancia-title" v-if="tab == 2">预约抽号</div>
                 <div class="mui-line"></div>
                 <ul class="top-faceul">
-                    <li class="mui-col-xs-3 hz"
-                        @click="showItemPages('8021180485468160','http://172.16.6.222:1777/getno',$event)"><img
-                            src="images/hz.png"><span><a href="#">户&nbsp;&nbsp;政</a></span>
+                    <li class="mui-col-xs-3"
+                        @click="showItemPages('8021180485468160','http://172.16.6.222:1777/getno',$event)">
+                        <span class="hz"><a href="#">户　政</a></span>
                     </li>
-                    <li class="mui-col-xs-3 crj"
-                        @click="showItemPages('8007070054222336','http://172.16.6.211:1777/getno',$event)"><img
-                            src="images/crj.png"><span><a href="#">出入境</a></span></li>
-                    <li class="mui-col-xs-3 rcrs"
-                        @click="showItemPages('7999689870936064','http://172.16.6.227:1777/getno',$event)"><img
-                            src="images/rcrs.png"><span><a href="#">人才人社</a></span></li>
-                    <li class="mui-col-xs-3 jh"
-                        @click="showSpaItemPages('8000268167611904','http://172.16.6.248:1777/getno',$event,1)"><img
-                            src="images/jh.png"><span><a href="#">结&nbsp;&nbsp;婚</a></span></li>
-                    <li class="mui-col-xs-3 lh"
-                        @click="showSpaItemPages('8003710388110336','http://172.16.6.233:1777/getno',$event,1)"><img
-                            src="images/lh.png"><span><a href="#">离&nbsp;&nbsp;婚</a></span></li>
-                    <li class="mui-col-xs-3 sw"
-                        @click="showSpaItemPages('8049236260585984','http://172.16.6.224:1777/getno',$event,1)"><img
-                            src="images/sw.png"><span><a href="#">税&nbsp;&nbsp;务</a></span></li>
-                    <li class="mui-col-xs-3 spj"
-                        @click="showSpaItemPages('7999532585125888','http://172.16.6.253:1777/getno',$event,1)"><img
-                            src="images/spj.png"><span><a href="#">审批局</a></span></li>
-                    <li class="mui-col-xs-3 qt"
-                        @click="showItemPages('7999532027317248','http://172.16.6.253:1777/getno',$event)"><img
-                            src="images/qt.png"><span><a href="#">其&nbsp;&nbsp;他</a></span></li>
+                    <li class="mui-col-xs-3"
+                        @click="showItemPages('8007070054222336','http://172.16.6.211:1777/getno',$event)">
+                        <span class="crj"><a href="#">出入境</a></span>
+                    </li>
+                    <li class="mui-col-xs-3"
+                        @click="showItemPages('7999689870936064','http://172.16.6.227:1777/getno',$event)">
+                        <span class="rcrs"><a href="#">人才人社</a></span>
+                    </li>
+                    <li class="mui-col-xs-3"
+                        @click="showSpaItemPages('8000268167611904','http://172.16.6.248:1777/getno',$event,1)">
+                        <span class="jh"><a href="#">结　婚</a></span>
+                    </li>
+                    <li class="mui-col-xs-3"
+                        @click="showSpaItemPages('8003710388110336','http://172.16.6.233:1777/getno',$event,1)">
+                        <span class="lh"><a href="#">离　婚</a></span>
+                    </li>
+                    <li class="mui-col-xs-3"
+                        @click="showSpaItemPages('8049236260585984','http://172.16.6.224:1777/getno',$event,1)">
+                        <span class="sw"><a href="#">税　务</a></span>
+                    </li>
+                    <li class="mui-col-xs-3"
+                        @click="showSpaItemPages('7999532585125888','http://172.16.6.253:1777/getno',$event,1)">
+                        <span class="spj"><a href="#">审批局</a></span>
+                    </li>
+                    <li class="mui-col-xs-3"
+                        @click="showItemPages('7999532027317248','http://172.16.6.253:1777/getno',$event)">
+                        <span class="qt"><a href="#">其　他</a></span>
+                    </li>
                 </ul>
 
                 <!--end-->
@@ -66,7 +73,7 @@
                 <ul class="bottom-faceul">
                     <li class="mui-col-xs-3" v-for="category in categoryList"
                         @click="showItemList(category.id,'')">
-                        <span><a href="#">{{category.name}}</a></span>
+                        <p><a href="#">{{category.name}}</a></p>
                     </li>
                 </ul>
             </div>
@@ -74,18 +81,18 @@
                 <ul class="bottom-faceul">
                     <li class="mui-col-xs-3" v-for="item in itemList"
                         @click="showCallNumber(item.id)">
-                        <span><a href="#">{{item.name}}</a></span>
+                        <p><a href="#">{{item.name}}</a></p>
                     </li>
                     <li class="mui-col-xs-3" v-if="isShowItemList && initItemCategory && tab==2"
                         v-for="item in itemList"
-                        @click="showPreOrder(item)"><span><a href="#">{{item.name}}</a></span></li>
+                        @click="showPreOrder(item)"><p><a href="#">{{item.name}}</a></p></li>
                 </ul>
             </div>
             <div class="div-bottom" v-if="isShowItemList && initItemCategory && tab==2">
                 <ul class="bottom-faceul">
                     <li class="mui-col-xs-3" v-for="item in itemList"
                         @click="showPreOrder(item)">
-                        <span><a href="#">{{item.name}}</a></span>
+                        <p><a href="#">{{item.name}}</a></p>
                     </li>
                 </ul>
             </div>
@@ -154,7 +161,6 @@
         data: {
             isShowHtml: true,
             currentTab: 1,
-            // apiUrl: 'http://lhsmzx.deyatong.com',
             apiUrl: 'http://47.96.11.207',
             // apiUrl: 'http://localhost:8765',
             distance: 200,
