@@ -27,6 +27,7 @@
             <div class="div-top">
                 <div class="sancia-title" v-if="tab == 1">在线抽号</div>
                 <div class="sancia-title" v-if="tab == 2">预约抽号</div>
+                <div class="sancia-title" v-if="tab == 3">在线预审</div>
                 <div class="mui-line"></div>
                 <ul class="top-faceul">
                     <li class="mui-col-xs-3"
@@ -92,6 +93,15 @@
                 <ul class="bottom-faceul">
                     <li class="mui-col-xs-3" v-for="item in itemList"
                         @click="showPreOrder(item)">
+                        <p><a href="#">{{item.name}}</a></p>
+                    </li>
+                </ul>
+            </div>
+            <!-- 在线预审 -->
+            <div class="div-bottom" v-if="isShowItemList && initItemCategory && tab==3">
+                <ul class="bottom-faceul">
+                    <li class="mui-col-xs-3" v-for="item in itemList"
+                        @click="goItemDetail(item.id)">
                         <p><a href="#">{{item.name}}</a></p>
                     </li>
                 </ul>
@@ -637,6 +647,11 @@
                 mui.alert("请前往个人中心绑定身份信息<br>", "重要提示", "确定", function () {
                     location.href = "grzx.html"
                 })
+            },
+            // 在线预审
+            goItemDetail: function (itemId) {
+                // location.href = "itemDetail.html?itemId=" + itemId;
+                location.href = "itemDetail.html?itemId=" + '1135374889667006465';// 医师注册
             }
         },
         created() {

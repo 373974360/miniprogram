@@ -1,0 +1,88 @@
+
+.header {
+    height: 60px;
+    background: #3e90f4;
+}
+.header .back {
+    color: #FFFFFF;
+    padding: 18px;
+    position: absolute;
+}
+.header .title {
+    line-height: 60px;
+    color: #FFFFFF;
+    font-size: 1.2rem;
+}
+.header .home {
+    color: #FFFFFF;
+    padding-right: 18px;
+    padding-top: 18px;
+}
+.preaudit .global {
+    padding-top: 60px;
+    padding-bottom: 80px;
+}
+.preaudit .global .item-title {
+    margin: 0 auto;
+    font-size: 20px;
+    font-weight: bold;
+}
+.preaudit .global .separate {
+    padding-top: 60px;
+}
+.preaudit .global .separate1 {
+    padding-top: 20px;
+}
+.preaudit .global .content {
+    padding-left: 8px;
+    line-height: 200%;
+}
+.preaudit .global .content .content-title {
+    height: 22px;
+    border-bottom: 1px solid #acacac;
+}
+.preaudit .global .content p {
+    margin-bottom: 0px;
+}
+.preaudit .global .content .content-title .icon {
+    font-size: 17px;
+    color: #1f7ce7;
+    float: left;
+    padding: 0 3px 0 0;
+}
+.preaudit .global .content .content-title .title {
+    color: #1f7ce7;
+    font-size: 17px;
+    font-weight: bold;
+    border-bottom: 2px solid #3060cc;
+    float: left;
+    line-height: 20px;
+    padding: 0 5px;
+}
+.preaudit .global .content .condition-item {
+    margin-left: 15px;
+}
+.preaudit .global .content .item-table {
+    font-size: 14px;
+}
+.preaudit .global .content .item-table th {
+    text-align: left;
+    width: 100px;
+}
+.preaudit .global .content .material-table {
+    font-size: 14px;
+}
+.preaudit .global .content .material-table .material-button {
+    font-size: 14px;
+    width: 120px;
+    height: 25px;
+    margin: 0 30px;
+
+}
+.preaudit .global .content .material-table td {
+    width: 400px;
+}
+.preaudit .save-button {
+    position: fixed;
+    bottom: 0;
+}

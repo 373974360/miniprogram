@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>微政务</title>
+    <link rel="stylesheet" type="text/css" href="styles/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/wmh.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/icons-extra.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/preaudit.css"/>
+<!--    <link rel="stylesheet" href="styles/layui.css"  media="all">
+    <script src="js/layui.js" charset="utf-8"></script>-->
+    <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script src="js/common.js"></script>
+</head>
+<body>
+<div id="app">
+    <header class="mui-bar mui-bar-nav news-logo header">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left back"></a>
+        <h1  class="mui-title title">
+            <span>在线预审</span>
+        </h1>
+        <a href="index.html" class="mui-icon mui-icon-home mui-pull-right home"></a>
+    </header>
+    <div class="preaudit">
+        <div class="global">
+            <div class="mui-title item-title">{{basicInfo.name}}</div>
+            <div class="separate"></div>
+            <div class="content">
+                <div class="content-title">
+                    <p class="title">
+                        <span class="mui-icon-extra mui-icon-extra-dictionary icon"></span>
+                        审批条件
+                    </p>
+                </div>
+                <p class="condition-item" v-html="basicInfo.acceptCondition" v-if="basicInfo.acceptCondition"></p>
+                <p class="condition-item" v-else>无</p>
+            </div>
+            <div class="separate1"></div>
+            <div class="content">
+                <div class="content-title">
+                    <p class="title">
+                        <span class="mui-icon mui-icon-contact icon"></span>
+                        基本信息
+                    </p>
+                </div>
+                <table class="item-table">
+                    <tbody>
+                    <tr v-if="identityVo.name">
+                        <th>姓名</th>
+                        <td>{{identityVo.name}}</td>
+                    </tr>
+                    <tr v-if="identityVo.idcardNo">
+                        <th>身份证号</th>
+                        <td>{{identityVo.idcardNo}}</td>
+                    </tr>
+                    <tr v-if="identityVo.phone">
+                        <th>联系电话</th>
+                        <td>{{identityVo.phone}}</td>
+                    </tr>
+                    <tr v-if="identityVo.address">
+                        <th>通讯地址</th>
+                        <td>{{identityVo.address}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="separate1"></div>
+            <div class="content">
+                <div class="content-title">
+                    <p class="title">
+                        <span class="mui-icon-extra mui-icon-extra-topic icon"></span>
+                        申报材料
+                    </p>
+                </div>
+                <table class="material-table" v-if="materials.length > 0">
+                    <tbody>
+                    <tr v-for="(material,index) in materials">
+                        <td>
+                            <b>材料名称:</b> {{material.materialsName}}<br>
+                            <button type="button" class="mui-btn-primary mui-icon mui-icon-camera material-button" @click="appendByCamera()">
+                                拍照上传
+                            </button>
+                            <button type="button" class="mui-btn-primary mui-icon-extra mui-icon-extra-topic material-button" @click="appendByGallery()">
+                                文件选取
+                            </button>
+                            <p id="file-list-title" style="display: none">上传文件列表：</p>
+                            <ul id="file-list" style="text-align:left;"></ul>
+                            <button type="button" class="mui-btn-success mui-icon mui-icon-upload material-button" @click="upload(material.id)">
+                                上传到服务器
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <p class="condition-item" v-else>无</p>
+                <!--<div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-normal" id="testList">选择多文件</button>
+                    <div class="layui-upload-list">
+                        <table class="layui-table">
+                            <thead>
+                            <tr><th>文件名</th>
+                                <th>大小</th>
+                                <th>状态</th>
+                                <th>操作</th>
+                            </tr></thead>
+                            <tbody id="demoList"></tbody>
+                        </table>
+                    </div>
+                    <button type="button" class="layui-btn" id="testListAction">开始上传</button>
+                </div>-->
+            </div>
+        </div>
+        <button type="button" class="mui-btn mui-btn-primary mui-btn-block save-button" @click="savePreaudit()">提交预审</button>
+    </div>
+</div>
+</body>
+</html>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            apiUrl: 'http://localhost:8765',
+            itemId: undefined,
+            identityVo: {
+                id: undefined,
+                idcardNo: undefined,
+                name: undefined,
+                gender: undefined,
+                birthday: undefined,
+                address: undefined,
+                phone: undefined,
+                wechatOpenid: '7777777'
+            },
+            basicInfo: {},
+            materials: [],
+            files: [],
+            fileIndex: 1,
+            itemPretrial: {
+                id: undefined,
+                memberId: undefined,
+                itemId: undefined,
+                materialsVersion: undefined,
+                itemPretrialMaterialVoList: []
+            },
+        },
+        created() {
+            this.getIdentityInfoByOpenId();
+            this.itemId = getParam('itemId');
+            this.initItemDetail();
+            this.getItemMaterials();
+        },
+        methods: {
+            // 用户信息查询
+            getIdentityInfoByOpenId() {
+                let _this = this;
+                $.ajax({
+                    method: "get",
+                    url: _this.apiUrl + "/web/api/number/getIdentityInfoByOpenId",
+                    data: "wechatOpenid=" + _this.identityVo.wechatOpenid,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200 && result.data) {
+                            _this.identityVo = result.data;
+                        } else {
+                            _this.tipBindInfo();
+                        }
+                    },
+                    error: function () {
+                        alert('fail');
+                    }
+                });
+            },
+            tipBindInfo: function () {
+                mui.alert("请前往个人中心绑定身份信息<br>", "重要提示", "确定", function () {
+                    location.href = "grzx.html"
+                })
+            },
+            initItemDetail() {
+                let _this = this;
+                $.ajax({
+                    type: "get",
+                    url: _this.apiUrl + "/web/api/item/getItemDetail",
+                    dataType: 'json',
+                    data: { id: _this.itemId },
+                    success: function (response) {
+                        if (response.status === 200 && response.data) {
+                            _this.basicInfo = response.data
+                        } else {
+                            mui.alert(response.message);
+                        }
+                    }
+                });
+            },
+            getItemMaterials() {
+                let _this = this;
+                $.ajax({
+                    type: "get",
+                    url: _this.apiUrl + "/web/api/item/selectNewestMaterialsByItemId",
+                    dataType: 'json',
+                    data: { itemId: _this.itemId },
+                    success: function (response) {
+                        if (response.status === 200) {
+                            if (response.data.length > 0) {
+                                _this.materials = response.data;
+                                _this.initPretrialMaterials();
+                            }
+                        } else {
+                            mui.alert(response.message);
+                        }
+                    }
+                });
+            },
+            initPretrialMaterials() {
+                let _this = this;
+                _this.itemPretrial.materialsVersion = _this.materials[0].materialsVersion;
+                for (let material of _this.materials) {
+                    let itemPretrialMaterial = {
+                        materialsId: material.id,
+                    };
+                    this.itemPretrial.itemPretrialMaterialVoList.push(itemPretrialMaterial);
+                }
+            },
+            // 拍照添加文件
+            appendByCamera(){
+                plus.camera.getCamera().captureImage(function(p){
+                    appendFile(p);
+                });
+            },
+            // 从相册添加文件
+            appendByGallery(){
+                plus.gallery.pick(function(p){
+                    appendFile(p);
+                });
+            },
+            // 添加文件
+            appendFile(p){
+                let fileMax = 1024 * 1024 * 10;
+                if (p.size > fileMax) {
+                    mui.alert("文件过大，请重新选择文件！文件最大为10MB！");
+                    return
+                }
+                let _this = this;
+                let fe = document.getElementById("file-list");
+                let li = document.createElement("li");
+                li.innerText = p.substr(p.lastIndexOf('/')+1);
+                fe.appendChild(li);
+                _this.files.push({name: "uploadKey" + _this.fileIndex, path: p});
+                _this.fileIndex++;
+                let title = document.getElementById("file-list-title");
+                title.style.display = 'block';
+            },
+            // 上传文件
+            upload(materialId){
+                console.log(materialId)
+                let _this = this;
+                if(_this.files.length <= 0){
+                    mui.alert("没有添加上传文件！");
+                    return;
+                }
+                let wt = plus.nativeUI.showWaiting();
+                let task = plus.uploader.createUpload(
+                    _this.apiUrl + "/manage/common/upload",
+                    {method:"POST"},
+                    // 上传完成
+                    function(result){
+                        if(result.status == 200){
+                            mui.toast("上传成功");
+                            plus.storage.setItem("uploader", result.data);
+                            let w = plus.webview.create("uploader_ret.html", "uploader_ret.html", {scrollIndicator:'none', scalable:false});
+                            w.addEventListener("loaded", function(){
+                                wt.close();
+                                w.show("slide-in-right",300);
+                            },false);
+
+                            for (let itemPretrialMaterialVo of _this.itemPretrial.itemPretrialMaterialVoList) {
+                                if (itemPretrialMaterialVo.materialsId === materialId) {
+                                    if (itemPretrialMaterialVo.materialsUrl) {
+                                        itemPretrialMaterialVo.materialsUrl += `,${result.data.url}`
+                                    } else {
+                                        itemPretrialMaterialVo.materialsUrl = `${result.data.url}`
+                                    }
+                                }
+                            }
+                        }else{
+                            mui.toast("上传失败");
+                            wt.close();
+                        }
+                        let fe = document.getElementById("file-list");
+                        fe.html("");
+                        _this.files = [];
+                        _this.fileIndex = 1;
+                    }
+                );
+                // task.addData("client","HelloH5+");
+                task.addData("uid", getUid());
+                for(let i = 0; i<files.length; i++){
+                    let f = files[i];
+                    task.addFile(f.path, {key: "file"});
+                }
+                task.start();
+            },
+            // 产生一个随机数
+            getUid(){
+                return Math.floor(Math.random()*100000000+10000000).toString();
+            },
+            savePreaudit() {
+                let _this = this;
+                for (let [index, val] of _this.materials.entries()) {
+                    if (!this.itemPretrial.itemPretrialMaterialVoList[index].materialsUrl) {
+                        mui.alert('资料提交不全，请先上传资料！')
+                        return
+                    }
+                }
+                _this.itemPretrial.itemId = _this.itemId;
+                $.ajax({
+                    type: "post",
+                    url: _this.apiUrl + "/web/api/preaudit/saveOrUpdatePreauditRecordVo",
+                    dataType: 'json',
+                    data: _this.itemPretrial,
+                    success: function (response) {
+                        if (response.status === 200 && response.data) {
+                            mui.toast('申请提交成功，请耐心等待审核！')
+                            location.href = "index.html"
+                        } else {
+                            mui.alert('申请提交失败，请重新提交审核！');
+                        }
+                    }
+                });
+            }
+        }
+    });
+/*    layui.use('upload', function(){
+        var $ = layui.jquery,
+            upload = layui.upload;
+        // 多文件列表示例
+        var demoListView = $('#uploadList'),
+            uploadListIns = upload.render({
+            elem: '#materialList',
+            url: 'http://localhost:8765/manage/common/upload',
+            size: 10240,
+            accept: 'file',
+            multiple: true,
+            auto: false,
+            bindAction: '#materialAction',
+            choose: function(obj){
+                // 将每次选择的文件追加到文件队列
+                var files = this.files = obj.pushFile();
+                // 读取本地文件
+                obj.preview(function(index, file, result){
+                    var tr = $(['<tr id="upload-'+ index +'">'
+                        ,'<td>'+ file.name +'</td>'
+                        ,'<td>'+ (file.size/1014).toFixed(1) +'kb</td>'
+                        ,'<td>等待上传</td>'
+                        ,'<td>'
+                        ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+                        ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+                        ,'</td>'
+                        ,'</tr>'].join(''));
+
+                    // 单个重传
+                    tr.find('.demo-reload').on('click', function(){
+                        obj.upload(index, file);
+                    });
+                    // 删除
+                    tr.find('.demo-delete').on('click', function(){
+                        // 删除对应的文件
+                        delete files[index];
+                        tr.remove();
+                        // 清空 input file 值，以免删除后出现同名文件不可选
+                        uploadListIns.config.elem.next()[0].value = '';
+                    });
+                    demoListView.append(tr);
+                });
+            },
+            done: function(res, index, upload){
+                // 上传成功
+                if(res.status == 200){
+                    var tr = demoListView.find('tr#upload-'+ index),
+                        tds = tr.children();
+                    tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+                    // 清空操作
+                    tds.eq(3).html('');
+                    // 删除文件队列已经上传成功的文件
+                    return delete this.files[index];
+                }
+                this.error(index, upload);
+            },
+            error: function(index, upload){
+                var tr = demoListView.find('tr#upload-'+ index),
+                    tds = tr.children();
+                tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+                // 显示重传
+                tds.eq(3).find('.demo-reload').removeClass('layui-hide');
+            }
+        });
+    });*/
+</script>
+

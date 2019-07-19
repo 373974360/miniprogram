@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <title>微政务</title>
+    <link rel="stylesheet" type="text/css" href="styles/mui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/wmh.css"/>
+    <link rel="stylesheet" type="text/css" href="styles/itemDetail.css"/>
+    <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/jquery-2.2.4.min.js"></script>
+    <script src="js/common.js"></script>
+</head>
+<body>
+<div id="app">
+    <header class="mui-bar mui-bar-nav news-logo header">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left back"></a>
+        <h1  class="mui-title title">
+            <span>事项详情</span>
+        </h1>
+        <a href="index.html" class=" mui-icon mui-icon-home mui-pull-right home"></a>
+    </header>
+    <div class="item-detail">
+        <div class="global">
+            <ul class="mui-table-view news-ul content">
+                <li class="mui-table-view-cell">
+                    <table class="item-table">
+                        <tbody>
+                        <tr v-if="basicInfo.name">
+                            <th>办理事项</th>
+                            <td>{{basicInfo.name}}</td>
+                        </tr>
+                        <tr v-if="basicInfo.itemType">
+                            <th>事项类型</th>
+                            <td>{{basicInfo.itemTypeName}}</td>
+                        </tr>
+                        <tr v-if="basicInfo.dealDeptName">
+                            <th>实施机构</th>
+                            <td>{{basicInfo.dealDeptName}}</td>
+                        </tr>
+                        <tr v-if="basicInfo.mold">
+                            <th>办理类型</th>
+                            <td>{{basicInfo.dealTypeName}}</td>
+                        </tr>
+                        <tr v-if="basicInfo.promiseComptime">
+                            <th>承诺期限</th>
+                            <td>{{basicInfo.promiseComptime}}个工作日</td>
+                        </tr>
+                        <tr v-if="basicInfo.serviceObject ">
+                            <th>服务对象</th>
+                            <td>{{basicInfo.serviceObjectName}}</td>
+                        </tr>
+                        <tr v-if="basicInfo.mold ">
+                            <th>办理形式</th>
+                            <td>{{basicInfo.moldName}}</td>
+                        </tr>
+                        <tr v-if="basicInfo.askTel">
+                            <th>咨询电话</th>
+                            <td>{{basicInfo.askTel}}</td>
+                        </tr>
+                        <tr v-if="basicInfo.superviseTel">
+                            <th>监督电话</th>
+                            <td>{{basicInfo.superviseTel}}</td>
+                        </tr>
+                        <tr v-if="basicInfo.acceptPlace">
+                            <th>办理地点</th>
+                            <td>{{basicInfo.acceptPlace}}</td>
+                        </tr>
+                        <tr v-if="basicInfo.acceptTime">
+                            <th>办理时间</th>
+                            <td>{{basicInfo.acceptTime}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </li>
+                <li class="mui-table-view-cell" v-if="basicInfo.legalBasis">
+                    <div class="li-title">办理依据</div>
+                    <p class="p1" v-html="basicInfo.legalBasis"></p>
+                </li>
+                <li class="mui-table-view-cell" v-if="basicInfo.acceptCondition">
+                    <div class="li-title">办理条件</div>
+                    <p class="p1" v-html="basicInfo.acceptCondition"></p>
+                </li>
+                <li class="mui-table-view-cell" v-if="materials.length > 0">
+                    <div class="li-title">提交材料</div>
+                    <table class="material-table">
+                        <tbody>
+                        <tr v-for="(material,index) in materials">
+                            <td>
+                                &nbsp;&nbsp;&nbsp;{{index+1}})  {{material.materialsName}}<br>
+                                <p class="p2">
+                                    材料来源：{{material.materialsFrom}}<br>
+                                    材料类型：{{material.materialsTypeName}}<br>
+                                    <span v-if="material.materialsSubTypeName">
+                                    材料子类型：{{material.materialsSubTypeName}}<br>
+                                    </span>
+                                    <span v-if="material.copySpecialRequirements">
+                                    复印件特殊要求：{{material.copySpecialRequirements}}<br>
+                                    </span>
+                                    <span v-if="material.materialsWarn">
+                                    填表须知：{{material.materialsWarn}}<br>
+                                    </span>
+                                    <span v-if="material.materialsNum">
+                                    纸质材料数量：{{material.materialsNum}}
+                                    </span>
+                                </p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </li>
+                <li class="mui-table-view-cell" v-if="basicInfo.remark">
+                    <div class="li-title">注意事项</div>
+                    <p class="p1" v-html="basicInfo.remark"></p>
+                </li>
+                <li class="mui-table-view-cell" v-if="basicInfo.handleWorkflow">
+                    <div class="li-title">办理流程</div>
+                    <!--<p v-html="basicInfo.handleWorkflow">
+                    </p>-->
+                    <a :href="basicInfo.handleWorkflow" target="_blank">{{basicInfo.handleWorkflow}}</a>
+                </li>
+                <li class="mui-table-view-cell" v-if="basicInfo.chargeStandard && basicInfo.chargeBasis">
+                    <div class="li-title">收费依据</div>
+                    <p class="p1" v-if="basicInfo.chargeStandard">
+                        <b>收费标准：</b>
+                        <p class="p3" v-html="basicInfo.chargeStandard"></p>
+                    </p>
+                    <p class="p1" v-if="basicInfo.chargeBasis">
+                        <b>收费依据：</b>
+                        <p class="p3" v-html="basicInfo.chargeBasis"></p>
+                    </p>
+                </li>
+            </ul>
+        </div>
+        <button type="button" class="mui-btn mui-btn-primary mui-btn-block" @click="goPreaudit()">在线预审</button>
+    </div>
+</div>
+</body>
+</html>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            apiUrl: 'http://localhost:8765',
+            itemId: undefined,
+            basicInfo: {},
+            materials: [],
+        },
+        created() {
+            this.itemId = getParam('itemId');
+            this.initItemDetail();
+            this.getItemMaterials();
+        },
+        methods: {
+            initItemDetail() {
+                let _this = this;
+                $.ajax({
+                    type: "get",
+                    url: _this.apiUrl + "/web/api/item/getItemDetail",
+                    dataType: 'json',
+                    data: { id: _this.itemId },
+                    success: function (response) {
+                        if (response.status === 200) {
+                            _this.basicInfo = response.data
+                        } else {
+                            mui.alert(response.message);
+                        }
+                    }
+                });
+            },
+            getItemMaterials() {
+                let _this = this;
+                $.ajax({
+                    type: "get",
+                    url: _this.apiUrl + "/web/api/item/selectNewestMaterialsByItemId",
+                    dataType: 'json',
+                    data: { itemId: _this.itemId },
+                    success: function (response) {
+                        if (response.status === 200) {
+                            _this.materials = response.data
+                        } else {
+                            mui.alert(response.message);
+                        }
+                    }
+                });
+            },
+            goPreaudit() {
+                // location.href = "preaudit.html?itemId=" + this.itemId;
+                location.href = "preaudit.html?itemId=" + '1135374889667006465';// 医师注册
+            }
+        }
+    });
+</script>

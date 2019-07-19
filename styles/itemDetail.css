@@ -1,0 +1,45 @@
+
+.header {
+    height: 60px;
+    background: #3e90f4;
+}
+.header .back {
+    color: #FFFFFF;
+    padding: 18px;
+    position: absolute;
+}
+.header .title {
+    line-height: 60px;
+    color: #FFFFFF;
+    font-size: 1.2rem;
+}
+.header .home {
+    color: #FFFFFF;
+    padding-right: 18px;
+    padding-top: 18px;
+}
+.item-detail {
+    padding-top: 60px;
+}
+.item-detail .global .content {
+    padding-left: 8px;
+}
+.item-detail .global .item-table th {
+    width: 100px;
+}
+.item-detail .global .content li .p1 {
+    margin-left: 15px;
+}
+.item-detail .global .content li .p2 {
+    color: #8f8f94;
+    margin-left: 30px;
+}
+.item-detail .global .content li .p3 {
+    margin-left: 30px;
+}
+.item-detail .global .material-table {
+    font-size: 14px;
+}
+.item-detail .global .content li a {
+    text-decoration: underline blue; color: blue
+}
