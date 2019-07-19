@@ -133,7 +133,7 @@
                 </li>
             </ul>
         </div>
-        <button type="button" class="mui-btn mui-btn-primary mui-btn-block" @click="goPreaudit()">在线预审</button>
+        <button type="button" class="mui-btn mui-btn-primary mui-btn-block preaudit-button" @click="goPreaudit()">在线预审</button>
     </div>
 </div>
 </body>
@@ -143,9 +143,9 @@
     new Vue({
         el: '#app',
         data: {
-            // apiUrl: 'http://47.96.11.207',
+            apiUrl: 'http://47.96.11.207',
             // apiUrl: 'http://localhost:8765',
-            apiUrl: 'http://192.168.0.170',
+            // apiUrl: 'http://192.168.0.170',
             itemId: undefined,
             basicInfo: {},
             materials: [],
@@ -189,8 +189,8 @@
                 });
             },
             goPreaudit() {
-                // location.href = "preaudit.html?itemId=" + this.itemId;
-                location.href = "preaudit.html?itemId=" + '1135374889667006465';// 医师注册
+                location.href = "preaudit.html?itemId=" + this.itemId;
+                // location.href = "preaudit.html?itemId=" + '1135374889667006465';// 医师注册
             }
         }
     });

@@ -42,12 +42,8 @@
                         @click="showItemPages('7999689870936064','http://172.16.6.227:1777/getno',$event)">
                         <span class="rcrs"><a href="#">人才人社</a></span>
                     </li>
-                    <!--<li class="mui-col-xs-3"
-                        @click="showSpaItemPages('8000268167611904','http://172.16.6.248:1777/getno',$event,1)">
-                        <span class="jh"><a href="#">结　婚</a></span>
-                    </li>-->
                     <li class="mui-col-xs-3"
-                        @click="showSpaItemPages('1134392949887471617','http://172.16.6.248:1777/getno',$event,1)">
+                        @click="showSpaItemPages('8000268167611904','http://172.16.6.248:1777/getno',$event,1)">
                         <span class="jh"><a href="#">结　婚</a></span>
                     </li>
                     <li class="mui-col-xs-3"
@@ -65,6 +61,10 @@
                     <li class="mui-col-xs-3"
                         @click="showItemPages('7999532027317248','http://172.16.6.253:1777/getno',$event)">
                         <span class="qt"><a href="#">其　他</a></span>
+                    </li>
+                    <li class="mui-col-xs-3"
+                        @click="showSpaItemPages('1134392949887471617','http://172.16.6.248:1777/getno',$event,1)">
+                        <span class="qt"><a href="#">测  试</a></span>
                     </li>
                 </ul>
 
@@ -105,7 +105,7 @@
             <div class="div-bottom" v-if="isShowItemList && initItemCategory && tab==3">
                 <ul class="bottom-faceul">
                     <li class="mui-col-xs-3" v-for="item in itemList"
-                        @click="goItemDetail(item)">
+                        @click="goItemDetail(item.id)">
                         <p v-if="item.remoteEnable != 1"><a href="#">{{item.name}}</a></p>
                     </li>
                 </ul>
@@ -175,9 +175,9 @@
         data: {
             isShowHtml: true,
             currentTab: 1,
-            // apiUrl: 'http://47.96.11.207',
+            apiUrl: 'http://47.96.11.207',
             // apiUrl: 'http://localhost:8765',
-            apiUrl: 'http://192.168.0.170',
+            // apiUrl: 'http://192.168.0.170',
             distance: 200,
             identityVo: {
                 idcardNo: '610114199203273526',
@@ -654,8 +654,8 @@
                 })
             },
             // 在线预审
-            goItemDetail: function (item) {
-                location.href = "itemDetail.html?itemId=" + item.id;
+            goItemDetail: function (itemId) {
+                location.href = "itemDetail.html?itemId=" + itemId;
                 // location.href = "itemDetail.html?itemId=" + '1135374889667006465';// 医师注册
             }
         },
