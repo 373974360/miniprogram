@@ -27,6 +27,27 @@
     <script src="js/jquery-2.2.4.min.js"></script>
     <script src="js/raty/lib/jquery.raty.js"></script>
     <script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <style>
+        .mui-radio input[type=radio], .mui-radio input[type=radio]:before {
+            left: 0px;
+            font-size: 16px;
+            border: none;
+            width: auto;
+            height: auto;
+        }
+        .mui-radio label {
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            color: #1b1b1b;
+            width: 60px;
+            height: auto;
+            padding: 6px 0 0 0;
+            margin: 0;
+            text-align: right;
+        }
+    </style>
 </head>
 <body style="background: #ffffff">
 <div id="app" v-if="isShowHtml">
@@ -103,17 +124,6 @@
                         <p v-if="item.status == 2"><span>预约状态：</span>未赴约</p>
                         <p v-if="item.status == 3"><span>预约状态：</span>已取消</p>
                     </div>
-                    <!--<div class="card-content">-->
-                    <!--<table width="100%">-->
-                    <!--<tr>-->
-                    <!--<td width="60px"><p class="label">服务评价</p></td>-->
-                    <!--<td width="15px"><p class="label">：</p></td>-->
-                    <!--<td>-->
-                    <!--<div class="rate_ico"></div>-->
-                    <!--</td>-->
-                    <!--</tr>-->
-                    <!--</table>-->
-                    <!--</div>-->
                     <div class="btn-box" v-show="item.status == 0">
                         <button type="button" class="mui-btn mui-btn-primary card-btn" @click="cancelOrder(item.id)">
                             取消预约
@@ -125,16 +135,61 @@
                     <div class="card-border-bottom"><img src="images/card-bottom.png"></div>
                 </div>
             </div>
+            <div class="card-content" style="text-align: center;" v-if="totalPage > 0">
+                <button type="button" :disabled="page <= 1" @click="prePageCall('preorder')" style="padding: 3px; margin: 0">上一页</button>
+                <button type="button" :disabled="page >= totalPage" @click="nextPageCall('preorder')" style="padding: 3px; margin: 0">下一页</button>
+            </div>
+            <p v-else style="text-align: center;"><span>没有预约记录</span></p>
         </div>
+
         <div class="card-box" v-show="tabSelected == 3" style="display: none">
-            <div class="mui-card" v-for="item in callNumberList">
-                <div class="mui-card-content">
+            <div style="text-align: center;" v-if="totalPage > 0">
+                <div class="mui-input-row mui-radio" style="display: inline-block;">
+                    <input type="radio" name="callStatus" v-model="callStatus" value="0" id="callStatusWatting"><label for="callStatusWatting">已抽号</label>
+                </div>
+                <div class="mui-input-row mui-radio" style="display: inline-block;">
+                    <input type="radio" name="callStatus" v-model="callStatus" value="2" id="callStatusAccepted">
+                    <label for="callStatusAccepted" style="">待评价</label>
+                </div>
+                <div class="mui-input-row mui-radio" style="display: inline-block;">
+                    <input type="radio" name="callStatus" v-model="callStatus" value="3" id="callStatusCommented">
+                    <label for="callStatusCommented" style="">已评价</label>
+                </div>
+                <div class="mui-input-row mui-radio" style="display: inline-block;">
+                    <input type="radio" name="callStatus" v-model="callStatus" value="4" id="callStatusExpired">
+                    <label for="callStatusExpired" style="">已过期</label>
+                </div>
+            </div>
+
+            <div class="mui-card" v-for="(item,index) in callNumberList">
+                <div class="mui-card-content" v-if="callStatus == 0 ? true : item.status == callStatus">
                     <div class="card-title bottom-border-dashed">{{item.itemName}}</div>
                     <div class="card-content bottom-border-dashed">
-                        <p><span>抽号时间：</span>{{item.createTime}}</p>
-                        <p><span>您的号码：</span>{{item.orderNo}}</p>
+                        <div><p><span>抽号时间：</span><span>{{item.createTime}}</span></p></div>
+                        <div><p><span>您的号码：</span><span>{{item.orderNo}}</span></p></div>
+                        <div><p><span>抽号状态：</span><span v-if="item.status == 0">等待叫号</span><span v-if="item.status == 1">已叫号</span><span v-if="item.status == 2">已受理</span><span v-if="item.status == 3">已评价</span><span v-if="item.status == 4">已过期</span></p></div>
+                        <div v-if="item.status == 3">
+                            <p>
+                                <span>评价结果：</span>
+                                <p style="vertical-align: middle;"><img src="js/raty/lib/img/star-on.png" style="width: 14px; height: 14px; margin-right: 5px;" v-for="c in item.score"></p>
+                            </p>
+                        </div>
                     </div>
-                    <div class="btn-box" v-show="item.status == 0">
+                    <div class="card-content" v-if="item.status == 2">
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <img :id="item.id + '_' + c"
+                                         src="js/raty/lib/img/star-off.png"
+                                         style="width: 24px; height: 25px; margin-right: 2px;"
+                                         @click="imgClick(item.id, c)"
+                                         v-for="c in 5">
+                                    <button type="button" @click="submitScore(item.id)" style="padding: 3px; margin: 0">评价服务</button>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="btn-box" v-if="item.status == 4"><!---->
                         <button type="button" class="mui-btn mui-btn-primary card-btn"
                                 v-show="item.itemId === '7999362586413056'" :id="'code_btn' + item.itemId"
                                 @click="createQRCode(item)">生成二维码
@@ -147,6 +202,11 @@
                     <div class="card-border-bottom"><img src="images/card-bottom.png"></div>
                 </div>
             </div>
+            <div class="card-content" style="text-align: center;" v-if="totalPage > 0">
+                <button type="button" :disabled="page <= 1" @click="prePageCall('call')" style="padding: 3px; margin: 0">上一页</button>
+                <button type="button" :disabled="page >= totalPage" @click="nextPageCall('call')" style="padding: 3px; margin: 0">下一页</button>
+            </div>
+            <p v-else style="text-align: center;"><span>没有抽号记录</span></p>
         </div>
     </div>
     <div style="height: 48px"></div>
@@ -174,7 +234,7 @@
         el: '#app',
         data: {
             isShowHtml:false,
-            apiUrl: 'http://47.96.11.207',
+            apiUrl: 'http://localhost:8765',
             distance: 200,
             tabSelected: 1,
             identityVo: {
@@ -198,18 +258,81 @@
                 wechatOpenid: 'otddA5hsJMF8Qgdw6l1PTD05O5f0'
             },
             preorderVoList: undefined,
+            // 总页数
+            totalPage: 0,
+            // 当前页
             page: 1,
-            rows: 30,
+            rows: 2,
             itemIds: undefined,
             hardUrl: '',
-            callNumberList: undefined,
+            callNumberList: [],
             date: undefined,
             hour: undefined,
             nowDate: undefined,
             nowHour: undefined,
+            callStatus: 0
         },
         methods: {
+            callStatusClick(v) {
+                console.log(v);
+            },
+            submitScore(id) {
+                var index = -1;
+                var callVo = undefined;
+                for(let c of this.callNumberList) {
+                    index += 1;
+                    if (c.id === id) {
+                        callVo = c;
+                        break;
+                    }
+                }
+                var score = callVo.score;
+                if (score <= 0) {
+                    return;
+                }
+                var callId = callVo.id;
+                var remark = '';
+                if (score == 1) remark = '很不满意';
+                if (score == 2) remark = '不满意';
+                if (score == 3) remark = '一般';
+                if (score == 4) remark = '满意';
+                if (score == 5) remark = '非常满意';
+                var data = {callId: callId, score: score, remark: remark};
+                var _this = this;
+                $.ajax({
+                    method: "get",
+                    url: _this.apiUrl + "/web/api/number/commentByCallId",
+                    data: data,
+                    dataType: "json",
+                    success: function (result) {
+                        if (result.status == 200) {
+                            // 已评价
+                            callVo.status = 3;
+                        }
+                    }
+                });
+            },
+            imgClick(id, index) {
+                for (var i = 1; i <= 5; i++) {
+                    var imgId = '#' + id + '_' + i;
+                    var src = $(imgId).attr('src');
+                    if (i <= index) {
+                        src = src.replace('off', 'on');
+                    } else {
+                        src = src.replace('on', 'off');
+                    }
+                    $(imgId).attr('src', src);
+                }
+                for(let call of this.callNumberList) {
+                    if (call.id === id) {
+                        call.score = index;
+                    }
+                }
+                this.$forceUpdate();
+            },
+
             selectTab(index) {
+                this.page = 1;
                 this.tabSelected = index;
                 if (index == 2) {
                     this.showMyPreOrder()
@@ -381,7 +504,7 @@
             },
             showMyPreOrder: function () {
                 let _this = this;
-                let data = {page: _this.page, rows: _this.rows, id: _this.identityVo.id};
+                let data = {page: _this.page, size: _this.rows, id: _this.identityVo.id};
                 $.ajax({
                     method: "get",
                     url: _this.apiUrl + "/web/api/number/getNumberPreorderByIdentityId",
@@ -389,6 +512,11 @@
                     dataType: "json",
                     success: function (result) {
                         if (result.status == 200 && result.data != null) {
+                            console.dir(result);
+                            // 总页数
+                            _this.totalPage = result.data.pages;
+                            // 当前页
+                            _this.page = result.data.current;
                             $.each(result.data.records, function (n, value) {
                                 let s = value.time.substring(0, 10) + " " + value.timeSlot;
                                 _this.date = value.time.substring(0, 10);
@@ -411,7 +539,7 @@
             //我的抽号
             showMyGetNumber() {
                 let _this = this;
-                let data = {page: _this.page, rows: _this.rows, id: _this.identityVo.id};
+                let data = {page: _this.page, size: _this.rows, id: _this.identityVo.id};
                 $.ajax({
                     url: _this.apiUrl + "/web/api/number/numberCallByIdentityId",
                     method: "get",
@@ -419,6 +547,11 @@
                     dataType: "json",
                     success: function (result) {
                         if (result.status == 200 && result.data != null) {
+                            console.dir(result);
+                            // 总页数
+                            _this.totalPage = result.data.pages;
+                            // 当前页
+                            _this.page = result.data.current;
                             _this.callNumberList = result.data.records;
                             $.each(_this.callNumberList, function (n, value) {
                                 _this.date = value.createTime;
@@ -432,6 +565,18 @@
                         }
                     }
                 });
+            },
+            prePageCall(flag) {
+                if (this.page <= 1) return;
+                this.page = this.page - 1;
+                if ('preorder' === flag) this.showMyPreOrder();
+                if ('call' === flag) this.showMyGetNumber();
+            },
+            nextPageCall(flag) {
+                if (this.page >= this.totalPage) return;
+                this.page = this.page + 1;
+                if ('preorder' === flag) this.showMyPreOrder();
+                if ('call' === flag) this.showMyGetNumber();
             },
             //预约抽号
             getNumberByPreOrder(item) {
@@ -526,7 +671,7 @@
             },
         },
         created() {
-            this.initRaty();
+            // this.initRaty();
             // if (isWeiXin()) {
             //获取openId和是否关注标识
             this.isShowHtml = true;
