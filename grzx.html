@@ -135,10 +135,15 @@
                     <div class="card-border-bottom"><img src="images/card-bottom.png"></div>
                 </div>
             </div>
+            <div class="card-content" style="text-align: center;" v-if="totalPage > 0">
+                <button type="button" :disabled="page <= 1" @click="prePageCall('preorder')" style="padding: 3px; margin: 0">上一页</button>
+                <button type="button" :disabled="page >= totalPage" @click="nextPageCall('preorder')" style="padding: 3px; margin: 0">下一页</button>
+            </div>
+            <p v-else style="text-align: center;"><span>没有预约记录</span></p>
         </div>
 
         <div class="card-box" v-show="tabSelected == 3" style="display: none">
-            <div style="text-align: center;">
+            <div style="text-align: center;" v-if="totalPage > 0">
                 <div class="mui-input-row mui-radio" style="display: inline-block;">
                     <input type="radio" name="callStatus" v-model="callStatus" value="0" id="callStatusWatting"><label for="callStatusWatting">已抽号</label>
                 </div>
@@ -184,7 +189,7 @@
                             </tr>
                         </table>
                     </div>
-                    <div class="btn-box" v-show="item.status == 4">
+                    <div class="btn-box" v-if="item.status == 4"><!---->
                         <button type="button" class="mui-btn mui-btn-primary card-btn"
                                 v-show="item.itemId === '7999362586413056'" :id="'code_btn' + item.itemId"
                                 @click="createQRCode(item)">生成二维码
@@ -194,10 +199,14 @@
                                 @click="updateStatusToWait(item)">过号激活
                         </button>
                     </div>
-
                     <div class="card-border-bottom"><img src="images/card-bottom.png"></div>
                 </div>
             </div>
+            <div class="card-content" style="text-align: center;" v-if="totalPage > 0">
+                <button type="button" :disabled="page <= 1" @click="prePageCall('call')" style="padding: 3px; margin: 0">上一页</button>
+                <button type="button" :disabled="page >= totalPage" @click="nextPageCall('call')" style="padding: 3px; margin: 0">下一页</button>
+            </div>
+            <p v-else style="text-align: center;"><span>没有抽号记录</span></p>
         </div>
     </div>
     <div style="height: 48px"></div>
@@ -249,8 +258,11 @@
                 wechatOpenid: 'otddA5hsJMF8Qgdw6l1PTD05O5f0'
             },
             preorderVoList: undefined,
+            // 总页数
+            totalPage: 0,
+            // 当前页
             page: 1,
-            rows: 30,
+            rows: 2,
             itemIds: undefined,
             hardUrl: '',
             callNumberList: [],
@@ -320,6 +332,7 @@
             },
 
             selectTab(index) {
+                this.page = 1;
                 this.tabSelected = index;
                 if (index == 2) {
                     this.showMyPreOrder()
@@ -491,7 +504,7 @@
             },
             showMyPreOrder: function () {
                 let _this = this;
-                let data = {page: _this.page, rows: _this.rows, id: _this.identityVo.id};
+                let data = {page: _this.page, size: _this.rows, id: _this.identityVo.id};
                 $.ajax({
                     method: "get",
                     url: _this.apiUrl + "/web/api/number/getNumberPreorderByIdentityId",
@@ -499,6 +512,11 @@
                     dataType: "json",
                     success: function (result) {
                         if (result.status == 200 && result.data != null) {
+                            console.dir(result);
+                            // 总页数
+                            _this.totalPage = result.data.pages;
+                            // 当前页
+                            _this.page = result.data.current;
                             $.each(result.data.records, function (n, value) {
                                 let s = value.time.substring(0, 10) + " " + value.timeSlot;
                                 _this.date = value.time.substring(0, 10);
@@ -521,7 +539,7 @@
             //我的抽号
             showMyGetNumber() {
                 let _this = this;
-                let data = {page: _this.page, rows: _this.rows, id: _this.identityVo.id};
+                let data = {page: _this.page, size: _this.rows, id: _this.identityVo.id};
                 $.ajax({
                     url: _this.apiUrl + "/web/api/number/numberCallByIdentityId",
                     method: "get",
@@ -529,6 +547,11 @@
                     dataType: "json",
                     success: function (result) {
                         if (result.status == 200 && result.data != null) {
+                            console.dir(result);
+                            // 总页数
+                            _this.totalPage = result.data.pages;
+                            // 当前页
+                            _this.page = result.data.current;
                             _this.callNumberList = result.data.records;
                             $.each(_this.callNumberList, function (n, value) {
                                 _this.date = value.createTime;
@@ -542,6 +565,18 @@
                         }
                     }
                 });
+            },
+            prePageCall(flag) {
+                if (this.page <= 1) return;
+                this.page = this.page - 1;
+                if ('preorder' === flag) this.showMyPreOrder();
+                if ('call' === flag) this.showMyGetNumber();
+            },
+            nextPageCall(flag) {
+                if (this.page >= this.totalPage) return;
+                this.page = this.page + 1;
+                if ('preorder' === flag) this.showMyPreOrder();
+                if ('call' === flag) this.showMyGetNumber();
             },
             //预约抽号
             getNumberByPreOrder(item) {
