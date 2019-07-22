@@ -89,9 +89,14 @@
                             <button type="button" class="mui-btn-success mui-icon mui-icon-upload material-button" @click="upload(material.id)">
                                 上传到服务器
                             </button>-->
-                            <a href="javascript:;" class="mui-icon-extra mui-icon-extra-topic file" @click="fileChange(index)">选择文件
+                            <button type="button" class="mui-btn-primary mui-icon-extra mui-icon-extra-topic material-button" @click="fileChange(index)">
+                                文件选取
                                 <input type="file" multiple :id="'file' + index" v-show="false"/>
-                            </a>
+                            </button>
+                            <!--<a href="javascript:;" class="mui-icon-extra mui-icon-extra-topic file" @click="fileChange(index)">选择文件
+                                <input type="file" multiple :id="'file' + index" v-show="false"/>
+                            </a>-->
+
                             <span :id="'showFileName' + index"></span>
                             <br/>
                             <button type="button" class="mui-btn-success mui-icon mui-icon-upload material-button" @click="upload(index, material.id)">
@@ -220,7 +225,7 @@
                 console.log("fileChange: index: " + index)
                 let file = document.getElementById("file" + index);
                 file.click();
-                $(".file").on("change","input[type='file']",function(){
+                $(".material-button").on("change","input[type='file']",function(){
                     /*let filePath = $(this).val();
                     let arr = filePath.split('\\');
                     let fileName = arr[arr.length-1];*/
