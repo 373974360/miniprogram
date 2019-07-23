@@ -76,8 +76,7 @@
     font-size: 14px;
     width: 120px;
     height: 25px;
-    margin: 0 30px;
-
+    /*margin: 0 30px;*/
 }
 .preaudit .global .content .material-table td {
     width: 400px;
