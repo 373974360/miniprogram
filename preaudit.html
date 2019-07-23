@@ -96,7 +96,7 @@
                             <!--<a href="javascript:;" class="mui-icon-extra mui-icon-extra-topic file" @click="fileChange(index)">选择文件
                                 <input type="file" multiple :id="'file' + index" v-show="false"/>
                             </a>-->
-
+                            <span :id="'tips' + index" style="color: red">文件最大为10MB</span>
                             <span :id="'showFileName' + index"></span>
                             <br/>
                             <button type="button" class="mui-btn-success mui-icon mui-icon-upload material-button" @click="upload(index, material.id)">
@@ -240,6 +240,7 @@
                             let fileName = $("#showFileName" + index).html();
                             if (fileName.indexOf(f.name) == -1 ) {
                                 $("#showFileName" + index).append(f.name + "  ");
+                                $("#tips" + index).html("");
                             }
                         }
                     }
@@ -312,7 +313,7 @@
                     success: function (response) {
                         if (response.status === 200 && response.data) {
                             mui.alert('申请提交成功，请耐心等待审核！')
-                            location.href = "index.html"
+                            // location.href = "index.html"
                         } else {
                             mui.alert('申请提交失败，请重新提交审核！');
                         }
