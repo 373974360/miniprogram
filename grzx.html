@@ -47,6 +47,9 @@
             margin: 0;
             text-align: right;
         }
+        .buttonGray {
+            background-color: #ddd;
+        }
     </style>
 </head>
 <body style="background: #ffffff">
@@ -136,16 +139,16 @@
                 </div>
             </div>
             <div class="card-content" style="text-align: center;" v-if="totalPage > 0">
-                <button type="button" :disabled="page <= 1" @click="prePageCall('preorder')" style="padding: 3px; margin: 0">上一页</button>
-                <button type="button" :disabled="page >= totalPage" @click="nextPageCall('preorder')" style="padding: 3px; margin: 0">下一页</button>
+                <button type="button" :class="{ buttonGray: page <= 1 }" :disabled="page <= 1" @click="prePageCall('preorder')" style="padding: 3px; margin: 0">上一页</button>
+                <button type="button" :class="{ buttonGray: page >= totalPage }" :disabled="page >= totalPage" @click="nextPageCall('preorder')" style="padding: 3px; margin: 0">下一页</button>
             </div>
             <p v-else style="text-align: center;"><span>没有预约记录</span></p>
         </div>
 
         <div class="card-box" v-show="tabSelected == 3" style="display: none">
-            <div style="text-align: center;" v-if="totalPage > 0">
+            <div style="text-align: center;">
                 <div class="mui-input-row mui-radio" style="display: inline-block;">
-                    <input type="radio" name="callStatus" v-model="callStatus" value="0" id="callStatusWatting"><label for="callStatusWatting">已抽号</label>
+                    <input type="radio" name="callStatus" v-model="callStatus" value="10" id="callStatusWatting"><label for="callStatusWatting">已抽号</label>
                 </div>
                 <div class="mui-input-row mui-radio" style="display: inline-block;">
                     <input type="radio" name="callStatus" v-model="callStatus" value="2" id="callStatusAccepted">
@@ -162,7 +165,7 @@
             </div>
 
             <div class="mui-card" v-for="(item,index) in callNumberList">
-                <div class="mui-card-content" v-if="callStatus == 0 ? true : item.status == callStatus">
+                <div class="mui-card-content">
                     <div class="card-title bottom-border-dashed">{{item.itemName}}</div>
                     <div class="card-content bottom-border-dashed">
                         <div><p><span>抽号时间：</span><span>{{item.createTime}}</span></p></div>
@@ -203,8 +206,8 @@
                 </div>
             </div>
             <div class="card-content" style="text-align: center;" v-if="totalPage > 0">
-                <button type="button" :disabled="page <= 1" @click="prePageCall('call')" style="padding: 3px; margin: 0">上一页</button>
-                <button type="button" :disabled="page >= totalPage" @click="nextPageCall('call')" style="padding: 3px; margin: 0">下一页</button>
+                <button type="button" :class="{ buttonGray: page <= 1 }" :disabled="page <= 1" @click="prePageCall('call')" style="padding: 3px; margin: 0">上一页</button>
+                <button type="button" :class="{ buttonGray: page >= totalPage }" :disabled="page >= totalPage" @click="nextPageCall('call')" style="padding: 3px; margin: 0">下一页</button>
             </div>
             <p v-else style="text-align: center;"><span>没有抽号记录</span></p>
         </div>
@@ -271,12 +274,15 @@
             hour: undefined,
             nowDate: undefined,
             nowHour: undefined,
-            callStatus: 0
+            callStatus: 10
+        },
+        watch: {
+            callStatus: function(newStatus, oldStatus) {
+                this.page = 1;
+                this.showMyGetNumber();
+            }
         },
         methods: {
-            callStatusClick(v) {
-                console.log(v);
-            },
             submitScore(id) {
                 var index = -1;
                 var callVo = undefined;
@@ -540,7 +546,7 @@
             //我的抽号
             showMyGetNumber() {
                 let _this = this;
-                let data = {page: _this.page, size: _this.rows, id: _this.identityVo.id};
+                let data = {page: _this.page, size: _this.rows, id: _this.identityVo.id, callStatus: _this.callStatus};
                 $.ajax({
                     url: _this.apiUrl + "/web/api/number/numberCallByIdentityId",
                     method: "get",
